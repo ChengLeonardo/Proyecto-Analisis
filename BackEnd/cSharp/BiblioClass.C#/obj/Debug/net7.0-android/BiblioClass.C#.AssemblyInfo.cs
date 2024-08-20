@@ -17,8 +17,8 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyProductAttribute("BiblioClass.C#")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BiblioClass.C#")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
-[assembly: System.Runtime.Versioning.TargetPlatformAttribute("maccatalyst0.0")]
-[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("maccatalyst14.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("android0.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("android21.0")]
 
 // Generado por la clase WriteCodeFragment de MSBuild.
 
