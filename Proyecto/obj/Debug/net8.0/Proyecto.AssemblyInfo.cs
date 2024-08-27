@@ -10,15 +10,13 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("BiblioClass.C#")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Proyecto")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+800e6f487582d581bacf69d244f1a3970d30fdc4")]
-[assembly: System.Reflection.AssemblyProductAttribute("BiblioClass.C#")]
-[assembly: System.Reflection.AssemblyTitleAttribute("BiblioClass.C#")]
+[assembly: System.Reflection.AssemblyProductAttribute("Proyecto")]
+[assembly: System.Reflection.AssemblyTitleAttribute("Proyecto")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
-[assembly: System.Runtime.Versioning.TargetPlatformAttribute("android0.0")]
-[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("android21.0")]
 
 // Generado por la clase WriteCodeFragment de MSBuild.
 

@@ -1,0 +1,9 @@
+/mnt/Datos/2024_5_7/Cheng_Leonardo/Proyecto-Analisis/Proyecto/obj/Debug/net8.0/Proyecto.csproj.AssemblyReference.cache
+/mnt/Datos/2024_5_7/Cheng_Leonardo/Proyecto-Analisis/Proyecto/obj/Debug/net8.0/Proyecto.GeneratedMSBuildEditorConfig.editorconfig
+/mnt/Datos/2024_5_7/Cheng_Leonardo/Proyecto-Analisis/Proyecto/obj/Debug/net8.0/Proyecto.AssemblyInfoInputs.cache
+/mnt/Datos/2024_5_7/Cheng_Leonardo/Proyecto-Analisis/Proyecto/obj/Debug/net8.0/Proyecto.AssemblyInfo.cs
+/mnt/Datos/2024_5_7/Cheng_Leonardo/Proyecto-Analisis/Proyecto/obj/Debug/net8.0/Proyecto.csproj.CoreCompileInputs.cache
+/mnt/Datos/2024_5_7/Cheng_Leonardo/Proyecto-Analisis/Proyecto/obj/Debug/net8.0/Proyecto.MvcApplicationPartsAssemblyInfo.cache
+/mnt/Datos/2024_5_7/Cheng_Leonardo/Proyecto-Analisis/Proyecto/obj/Debug/net8.0/Proyecto.RazorAssemblyInfo.cache
+/mnt/Datos/2024_5_7/Cheng_Leonardo/Proyecto-Analisis/Proyecto/obj/Debug/net8.0/Proyecto.RazorAssemblyInfo.cs
+/mnt/Datos/2024_5_7/Cheng_Leonardo/Proyecto-Analisis/Proyecto/obj/Debug/net8.0/Proyecto.sourcelink.json
