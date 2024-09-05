@@ -1,4 +1,4 @@
-namespace Proyecto.Models;
+namespace Proyecto.Interfaces;
 
 public interface IDelete<T>
 {
