@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BiblioClass.C#")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+621aa837f58b381c58b2638935c5ceb6e0a9616b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4ff62924a0f8e833f965e07807784fced4fde05f")]
 [assembly: System.Reflection.AssemblyProductAttribute("BiblioClass.C#")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BiblioClass.C#")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Nhi4Ex8apgoJz4uM3mmbT57Lv4YIi4qS98gCa1oCz7z/36ovwDB4ODl0ypN2Lvc+VplNZ1HIUoXIoxT8jPrUBQ==",
+  "dgSpecHash": "1ar5oQTR8iRpwTO2pAiJNgvBUo1lokaIhBB1wFgSLYrYPjUlu5gNIAy+TGoYnGnZr8k+ItIg77efnvoPaVF/rQ==",
   "success": true,
   "projectFilePath": "/mnt/Datos/2024_5_7/Cheng_Leonardo/Proyecto-Analisis/Proyecto/Proyecto.csproj",
   "expectedPackageFiles": [
+    "/home/et12alumno/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/home/et12alumno/.nuget/packages/microsoft.entityframeworkcore/8.0.8/microsoft.entityframeworkcore.8.0.8.nupkg.sha512",
     "/home/et12alumno/.nuget/packages/microsoft.entityframeworkcore.abstractions/8.0.8/microsoft.entityframeworkcore.abstractions.8.0.8.nupkg.sha512",
     "/home/et12alumno/.nuget/packages/microsoft.entityframeworkcore.analyzers/8.0.8/microsoft.entityframeworkcore.analyzers.8.0.8.nupkg.sha512",
