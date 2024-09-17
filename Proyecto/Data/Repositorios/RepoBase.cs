@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Proyecto.Interfaces;
 
@@ -38,6 +39,10 @@ public class RepoBase<T, N> : IRepoBase<T, N> where T : class
     public List<T> Select()
     {
         return _dbSet.ToList();
+    }
+    public List<T> SelectWhere(Expression<Func<T, bool>> predicate)
+    {
+        return _dbSet.Where(predicate).ToList();
     }
 
     public void Update(T objeto)
