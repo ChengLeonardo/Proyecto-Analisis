@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Proyecto.Data;
 using Proyecto.Models;
 
-public class ProyectoDBContext : DbContext
+public class ProyectoDbContext : DbContext
 {
     public DbSet<Editorial> Editoriales { get; set; }
     public DbSet<Autor> Autores { get; set; }
