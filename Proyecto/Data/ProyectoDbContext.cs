@@ -4,18 +4,21 @@ using Proyecto.Models;
 
 public class ProyectoDbContext : DbContext
 {
-    public DbSet<Editorial> Editoriales { get; set; }
-    public DbSet<Autor> Autores { get; set; }
-    public DbSet<Socio> Socios { get; set; }
-    public DbSet<Titulo> Titulos { get; set; }
-    public DbSet<Libro> Libros { get; set; }
-    public DbSet<AutorTitulo> AutoresTitulos { get; set; }
-    public DbSet<Ejemplar> Ejemplares { get; set; }
-    public DbSet<Operador> Operadores { get; set; }
-    public DbSet<Prestamo> Prestamos { get; set; }
-    public DbSet<Genero> Generos { get; set; }
-    public DbSet<GeneroTitulo> GenerosTitulos { get; set; }
+    public DbSet<Editorial> Editorial { get; set; }
+    public DbSet<Autor> Autor { get; set; }
+    public DbSet<Socio> Socio { get; set; }
+    public DbSet<Titulo> Titulo { get; set; }
+    public DbSet<Libro> Libro { get; set; }
+    public DbSet<AutorTitulo> AutorTitulo { get; set; }
+    public DbSet<Ejemplar> Ejemplare { get; set; }
+    public DbSet<Operador> Operador { get; set; }
+    public DbSet<Prestamo> Prestamo { get; set; }
+    public DbSet<Genero> Genero { get; set; }
+    public DbSet<GeneroTitulo> GeneroTitulo { get; set; }
 
+    public ProyectoDbContext(DbContextOptions<ProyectoDbContext> options) : base(options)
+    {
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Configuración de claves primarias y relaciones
@@ -43,5 +46,7 @@ public class ProyectoDbContext : DbContext
             .HasKey(g => g.IdGenero);
         modelBuilder.Entity<GeneroTitulo>()
             .HasKey(gt => new { gt.IdGenero, gt.IdTitulo });
+        modelBuilder.Entity<Operador>()
+            .HasKey(o => o.IdOperador);
     }
 }

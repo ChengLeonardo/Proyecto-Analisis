@@ -1,0 +1,32 @@
+@model Proyecto.Models.Operador
+
+<form asp-action="Registrar" asp-controller="Register" method="post">
+    <input asp-for="IdOperador" value="0" type="hidden">
+    <div class="w-4/5 relative">
+        <label for="NombreUsuario">Nombre de Usuario</label>
+        <input asp-for="Usuario" id="NombreUsuario" class="pl-12 text-black w-full h-12 rounded-full bg-white outline-none" type="text" required>
+        <span asp-validation-for="Usuario" class="text-danger"></span>
+    </div>
+    <div class="w-4/5 relative">
+        <label for="Password">Contraseña</label>
+        <input asp-for="Pass" id="Password" class="pl-12 text-black w-full h-12 rounded-full bg-white outline-none" type="password" required>
+        <span asp-validation-for="Pass" class="text-danger"></span>
+    </div>
+    <div class="w-4/5 relative">
+        <label for="Apellido">Apellido</label>
+        <input asp-for="Apellido" id="Apellido" class="pl-12 text-black w-full h-12 rounded-full bg-white outline-none" type="text" required>
+        <span asp-validation-for="Apellido" class="text-danger"></span>
+    </div>
+        <div class="w-4/5 relative">
+        <label for="Apellido">Email</label>
+        <input asp-for="Email" id="Email" class="pl-12 text-black w-full h-12 rounded-full bg-white outline-none" type="email" required>
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="w-4/5 relative">
+        <label for="Nombre">Nombre</label>
+        <input asp-for="Nombre" id="Nombre" class="pl-12 text-black w-full h-12 rounded-full bg-white outline-none" type="text" required>
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+    <button type="submit">Continuar</button>
+    <a asp-action="Login" asp-controller="Home">Login</a>
+</form>

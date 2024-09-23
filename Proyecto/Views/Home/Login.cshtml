@@ -1,0 +1,28 @@
+@model Proyecto.Models.LoginViewModel;
+
+<section>
+        <div id="login">
+            <div>
+                <h1 class="mt-16 text-4xl font-bold">Inicio Sesion</h1>
+                <p>Ingresa tus datos para poder</p>
+                <p>ingresar a tu cuenta</p>
+            </div>
+            <form asp-action="Login" asp-controller="Home" class="w-4/6 mt-4 flex justify-center items-center flex-col" method="post">
+                @Html.ValidationSummary(true)  
+                <p>Nombre Usuario</p>
+                <!--Input de usuario-->
+                <div class="w-4/5 relative">
+                    <label for="nombreusuario"></label>
+                    <input asp-for="Usuario" id="nombreusuario" type="text" required > 
+                </div>
+                <!--Input de Contraseña-->
+                <p>Contraseña</p>
+                <div class="w-4/5 relative">
+                    <label for="contrasena"></label>
+                    <input asp-for="Pass" class="pl-12 text-black w-full h-12 rounded-full bg-white outline-none" id="contrasena" type="password" required >
+                </div>
+                <button type="submit">Iniciar sesion</button>
+            </form>
+            <a asp-action="Register" asp-controller="Home">Registrate</a>
+        </div>
+    </section>

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Proyecto.Data;
 using Proyecto.Data.Repositorios;
@@ -20,7 +21,12 @@ builder.Services.AddScoped<IRepoOperador, RepoOperador>();
 builder.Services.AddScoped<IRepoPrestamo, RepoPrestamo>();
 builder.Services.AddScoped<IRepoSocio, RepoSocio>();
 builder.Services.AddScoped<IRepoTitulo, RepoTitulo>();
-
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+        .AddCookie(options =>
+        {
+            options.LoginPath = "/Login/Login"; // Ruta a la página de inicio de sesión
+            options.LogoutPath = "/Home/Logout"; // Ruta a la acción de cierre de sesión
+        });
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -46,6 +52,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Login}/{id?}");
 
 app.Run();

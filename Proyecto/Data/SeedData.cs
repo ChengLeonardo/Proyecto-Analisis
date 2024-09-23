@@ -19,6 +19,7 @@ public class SeedData
                 Nombre = "Leonardo",
                 Apellido = "Cheng",
                 Email = "leonardo.chenget12de1@gmail.com",
+                Usuario  = "admin"
             };
 
             repoOperador.Insert(operadorAdministrador, "IdOperador");
