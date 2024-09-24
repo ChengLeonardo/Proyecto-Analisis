@@ -2,6 +2,10 @@ namespace Proyecto.Models;
 
 public class Titulo
 {
-    public int IdTitulo { get; set; } // INT NOT NULL AUTO_INCREMENT
-    public string NombreTitulo { get; set; } // VARCHAR(50) NOT NULL
+    public int IdTitulo { get; set; }
+    public string NombreTitulo { get; set; }
+
+    public ICollection<AutorTitulo> AutorTitulos { get; set; } // Relación 1:N con AutorTitulo
+    public ICollection<Libro> Libros { get; set; } // Relación 1:N con Libro
+    public ICollection<GeneroTitulo> GeneroTitulos { get; set; } // Relación 1:N con GeneroTitulo
 }

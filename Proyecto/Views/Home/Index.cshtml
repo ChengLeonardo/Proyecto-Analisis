@@ -1,9 +1,28 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model Proyecto.Models.HomeIndexViewModel;
 
 <div class="text-center">
     
+
+    <form asp-action="DetalleLibro" method="post">
+          <table>
+              <thead>
+                  <tr>
+                      <th>Titulo</th>
+                      <th>Editorial</th>
+                      <th>Imagen</th>
+                  </tr>
+              </thead>
+              <tbody>
+                <p> @Model.Administrador</p>
+                  @for (int i = 0; i < Model.LibrosPopulares.Count(); i++)
+                  {
+                      <tr>
+                          <td>@(Model.TitulosLibrosPopulares[i].NombreTitulo)</td>
+                      </tr>
+                  }
+              </tbody>
+          </table>
+    </form>
     <form asp-controller="Home" asp-action="Logout" method="post">
       @Html.AntiForgeryToken()
       <button type="submit">Logout</button>

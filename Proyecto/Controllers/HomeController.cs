@@ -11,10 +11,18 @@ namespace Proyecto.Controllers;
 public class HomeController : Controller
 {
     private IRepoOperador _repoOperador;
+    private IRepoLibro _repoLibro;
+    private IRepoGenero _repoGenero;
+    private IRepoEjemplar _repoEjemplar;
+    private IRepoPrestamo _repoPrestamo;
 
-    public HomeController(IRepoOperador repoOperador)
+    public HomeController(IRepoOperador repoOperador, IRepoGenero repoGenero, IRepoEjemplar repoEjemplar, IRepoLibro repoLibro, IRepoPrestamo repoPrestamo)
     {
         _repoOperador = repoOperador;
+        _repoLibro = repoLibro;
+        _repoGenero = repoGenero;
+        _repoEjemplar = repoEjemplar;
+        _repoPrestamo = repoPrestamo;
     }
 
     [HttpGet]
@@ -94,7 +102,7 @@ public class HomeController : Controller
     {
         if(ModelState.IsValid)
         {
-            var usuarioExistente = _repoOperador.SelectWhere(o => o.Nombre == model.Usuario).FirstOrDefault();
+            var usuarioExistente = _repoOperador.SelectWhere(o => o.Usuario == model.Usuario).FirstOrDefault();
 
             if(usuarioExistente != null)
             {
@@ -129,7 +137,35 @@ public class HomeController : Controller
     }
     public IActionResult Index()
     {
-        return View();
+        HomeIndexViewModel model = new HomeIndexViewModel();
+        if(Convert.ToUInt16(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value) == 1)
+        {
+            model.Administrador = true;
+        }
+        var librosMasPrestados = _repoPrestamo.Select()
+            .GroupBy(p => p.Ejemplar.IdLibro) // Agrupar por idLibro
+            .Select(g => new
+            {
+                IdLibro = g.Key,
+                CantidadPrestamos = g.Count() // Contar cuántos préstamos hay por libro
+            })
+            .OrderByDescending(x => x.CantidadPrestamos) // Ordenar por cantidad de préstamos
+            .Take(10) // Limitar a los 10 libros más prestados (puedes cambiar el número según lo necesites)
+            .ToList();
+
+        var idsLibrosMasPrestados = librosMasPrestados.Select(l => l.IdLibro).ToList();
+
+        model.LibrosPopulares = _repoLibro.SelectWhere(libro => idsLibrosMasPrestados.Contains(libro.IdLibro))
+            .ToList();
+
+        var titulosLibrosPopulares = model.LibrosPopulares.Select(libro => libro.Titulo).ToList();
+
+        model.TitulosLibrosPopulares = titulosLibrosPopulares; 
+        if(model.LibrosPopulares == null || model.TitulosLibrosPopulares == null)
+        {
+            throw new Exception(" esta vacio");
+        }
+        return View(model);
     }
 
     public IActionResult Privacy()

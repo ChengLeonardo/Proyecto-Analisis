@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Libro` (
   `idEditorial` INT NOT NULL,
   `idTitulo` INT NOT NULL,
   `ISBN` VARCHAR(30) NOT NULL,
+  rutaFoto VARCHAR(255),
   PRIMARY KEY (`idLibro`),
   UNIQUE INDEX `idbn_UNIQUE` (`ISBN` ASC),
   INDEX `fk_Libro_Titulo1_idx` (`idTitulo` ASC),
@@ -160,7 +161,7 @@ ENGINE = InnoDB;
 -- Table `5to_Biblioteca`.`Prestamo`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Prestamo` (
-  `idPrestamo` INT NOT NULL,
+  `idPrestamo` INT NOT NULL int AUTO_INCREMENT,
   `idEjemplar` INT UNSIGNED NOT NULL,
   `idSocio` INT NOT NULL,
   `salida` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
@@ -204,6 +205,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Genero` (
   `idGenero` INT NOT NULL AUTO_INCREMENT,
   `genero` VARCHAR(30) NOT NULL,
+  rutaFoto VARCHAR(255),
   PRIMARY KEY (`idGenero`))
 ENGINE = InnoDB;
 
