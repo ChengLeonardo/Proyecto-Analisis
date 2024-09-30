@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Proyecto.Interfaces;
 using Proyecto.Models;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Proyecto.Controllers;
 
@@ -142,7 +144,10 @@ public class HomeController : Controller
         {
             model.Administrador = true;
         }
-        var librosMasPrestados = _repoPrestamo.Select()
+
+        var prestamos = _repoPrestamo.Select().Include(p => p.Ejemplar).ToList();
+
+        var librosMasPrestados = prestamos
             .GroupBy(p => p.Ejemplar.IdLibro) // Agrupar por idLibro
             .Select(g => new
             {
@@ -153,18 +158,20 @@ public class HomeController : Controller
             .Take(10) // Limitar a los 10 libros más prestados (puedes cambiar el número según lo necesites)
             .ToList();
 
-        var idsLibrosMasPrestados = librosMasPrestados.Select(l => l.IdLibro).ToList();
+        var LibrosNuevos = _repoLibro.Select().OrderByDescending(x => x.FechaAgregada) // Ordenar por cantidad de préstamos
+            .Take(10)
+            .ToList(); // Limitar a los 10 libros más prestados (puedes cambiar el número según lo necesites)
 
-        model.LibrosPopulares = _repoLibro.SelectWhere(libro => idsLibrosMasPrestados.Contains(libro.IdLibro))
-            .ToList();
+        model.LibrosNuevos = LibrosNuevos;
+        var idsLibrosMasPrestados = librosMasPrestados.Select(l => l.IdLibro).ToList();
+        
+        model.LibrosPopulares = _repoLibro.SelectWhere(libro => idsLibrosMasPrestados.Contains(libro.IdLibro)).Include(libro => libro.Titulo).Include(libro => libro.Editorial).ToList();
 
         var titulosLibrosPopulares = model.LibrosPopulares.Select(libro => libro.Titulo).ToList();
-
-        model.TitulosLibrosPopulares = titulosLibrosPopulares; 
-        if(model.LibrosPopulares == null || model.TitulosLibrosPopulares == null)
-        {
-            throw new Exception(" esta vacio");
-        }
+        
+        var librosElegidos = _repoLibro.Select().OrderByDescending(x => x.Calificacion).Take(10).ToList();
+        var generos = _repoGenero.Select().ToList();
+        model.Generos = generos;
         return View(model);
     }
 

@@ -77,7 +77,9 @@ CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Libro` (
   `idEditorial` INT NOT NULL,
   `idTitulo` INT NOT NULL,
   `ISBN` VARCHAR(30) NOT NULL,
+  fechaAgregada DATE,
   rutaFoto VARCHAR(255),
+  calificacion DOUBLE,
   PRIMARY KEY (`idLibro`),
   UNIQUE INDEX `idbn_UNIQUE` (`ISBN` ASC),
   INDEX `fk_Libro_Titulo1_idx` (`idTitulo` ASC),
@@ -161,7 +163,7 @@ ENGINE = InnoDB;
 -- Table `5to_Biblioteca`.`Prestamo`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Prestamo` (
-  `idPrestamo` INT NOT NULL int AUTO_INCREMENT,
+  `idPrestamo` INT NOT NULL AUTO_INCREMENT,
   `idEjemplar` INT UNSIGNED NOT NULL,
   `idSocio` INT NOT NULL,
   `salida` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
@@ -183,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Prestamo` (
     FOREIGN KEY (`idSocio`)
     REFERENCES `5to_Biblioteca`.`Socio` (`idSocio`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON UPDATE NO ACTION, 
   CONSTRAINT `fk_Prestamo_Operador1`
     FOREIGN KEY (`idOperadorEntrega`)
     REFERENCES `5to_Biblioteca`.`Operador` (`idOperador`)
@@ -297,7 +299,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `5to_Biblioteca`;
-INSERT INTO `5to_Biblioteca`.`Libro` (`idLibro`, `idEditorial`, `idTitulo`, `ISBN`) VALUES (10, 1, 1, '123456');
+INSERT INTO `5to_Biblioteca`.`Libro` (`idLibro`, `idEditorial`, `idTitulo`, `ISBN`, fechaAgregada, calificacion) VALUES (10, 1, 1, '123456', CURRENT_DATE(), 4.0);
 
 
 COMMIT;

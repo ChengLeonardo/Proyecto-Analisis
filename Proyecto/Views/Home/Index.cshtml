@@ -4,20 +4,65 @@
     
 
     <form asp-action="DetalleLibro" method="post">
+        <p>Categorias</p>
+            <table>
+              <thead>
+                  <tr>
+                      <th>Nombre Categoria</th>
+                      <th></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  @for (int i = 0; i < Model.Generos.Count(); i++)
+                  {
+                      <tr>
+                          <td>@(Model.Generos[i].genero)</td>
+                          <td><img src="@(string.IsNullOrEmpty(Model.Generos[i].RutaFoto) ? "/images/DefaultGenero.png" : Model.Generos[i].RutaFoto)" asp-append-version /></td>
+                      </tr>
+                  }
+              </tbody>
+            </table>
+        <p>Libros Populares</p>
           <table>
               <thead>
                   <tr>
                       <th>Titulo</th>
                       <th>Editorial</th>
                       <th>Imagen</th>
+                      <th>Calificacion</th>
                   </tr>
               </thead>
               <tbody>
-                <p> @Model.Administrador</p>
                   @for (int i = 0; i < Model.LibrosPopulares.Count(); i++)
                   {
                       <tr>
-                          <td>@(Model.TitulosLibrosPopulares[i].NombreTitulo)</td>
+                          <td>@(Model.LibrosPopulares[i].Titulo.titulo)</td>
+                          <td>@(Model.LibrosPopulares[i].Editorial.editorial)</td>
+                          <td><img src="@(string.IsNullOrEmpty(Model.LibrosPopulares[i].RutaFoto) ? "/images/DefaultTapaLibro.jpg" : Model.LibrosPopulares[i].RutaFoto)" asp-append-version /></td>
+                          <td>@(Model.LibrosPopulares[i].Calificacion)</td>
+                      </tr>
+                  }
+              </tbody>
+          </table>
+        <p>Libros Nuevos</p>
+          </table>
+                    <table>
+              <thead>
+                  <tr>
+                      <th>Titulo</th>
+                      <th>Editorial</th>
+                      <th>Imagen</th>
+                      <th>Calificacion</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  @for (int i = 0; i < Model.LibrosNuevos.Count(); i++)
+                  {
+                      <tr>
+                          <td>@(Model.LibrosNuevos[i].Titulo.titulo)</td>
+                          <td>@(Model.LibrosNuevos[i].Editorial.editorial)</td>
+                          <td><img src="@(string.IsNullOrEmpty(Model.LibrosNuevos[i].RutaFoto) ? "/images/DefaultTapaLibro.jpg" : Model.LibrosPopulares[i].RutaFoto)" asp-append-version /></td>
+                          <td>@(Model.LibrosNuevos[i].Calificacion)</td>
                       </tr>
                   }
               </tbody>

@@ -3,7 +3,7 @@ namespace Proyecto.Models;
 public class Titulo
 {
     public int IdTitulo { get; set; }
-    public string NombreTitulo { get; set; }
+    public string titulo { get; set; }
 
     public ICollection<AutorTitulo> AutorTitulos { get; set; } // Relación 1:N con AutorTitulo
     public ICollection<Libro> Libros { get; set; } // Relación 1:N con Libro

@@ -4,5 +4,5 @@ namespace Proyecto.Interfaces;
 
 public interface ISelectWhere<T>
 {
-    List<T> SelectWhere(Expression<Func<T, bool>> predicate);
+    IQueryable<T> SelectWhere(Expression<Func<T, bool>> predicate);
 }

@@ -13,6 +13,14 @@
       "PackagePath": "staticwebassets/favicon.ico"
     },
     {
+      "Id": "/mnt/Datos/2024_5_7/Cheng_Leonardo/Proyecto-Analisis/Proyecto/wwwroot/images/DefaultGenero.png",
+      "PackagePath": "staticwebassets/images/DefaultGenero.png"
+    },
+    {
+      "Id": "/mnt/Datos/2024_5_7/Cheng_Leonardo/Proyecto-Analisis/Proyecto/wwwroot/images/DefaultTapaLibro.jpg",
+      "PackagePath": "staticwebassets/images/DefaultTapaLibro.jpg"
+    },
+    {
       "Id": "/mnt/Datos/2024_5_7/Cheng_Leonardo/Proyecto-Analisis/Proyecto/wwwroot/js/site.js",
       "PackagePath": "staticwebassets/js/site.js"
     },

@@ -5,7 +5,7 @@ namespace Proyecto.Data;
 
 public class SeedData
 {
-    public static void Initialize(IRepoOperador repoOperador, IRepoEjemplar repoEjemplar, IRepoPrestamo repoPrestamo, IRepoSocio repoSocio)
+    public static void Initialize(IRepoOperador repoOperador, IRepoEjemplar repoEjemplar, IRepoPrestamo repoPrestamo, IRepoSocio repoSocio, IRepoLibro repoLibro)
     {
         // Verificar si ya existen datos en la base de datos
         if (!repoOperador.Select().Any())
@@ -24,7 +24,8 @@ public class SeedData
 
             repoOperador.Insert(operadorAdministrador, "IdOperador");
             // Agregar más datos seed según sea necesario
-
+            // var editorial = new Editorial{ editorial = Hola}
+            // var libro = new Libro{ Editorial = }
             var prestamotest = new Prestamo
             {
                 Ejemplar = repoEjemplar.IdSelect(1),
