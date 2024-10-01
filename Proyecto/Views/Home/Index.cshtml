@@ -45,7 +45,6 @@
               </tbody>
           </table>
         <p>Libros Nuevos</p>
-          </table>
                     <table>
               <thead>
                   <tr>
@@ -63,6 +62,29 @@
                           <td>@(Model.LibrosNuevos[i].Editorial.editorial)</td>
                           <td><img src="@(string.IsNullOrEmpty(Model.LibrosNuevos[i].RutaFoto) ? "/images/DefaultTapaLibro.jpg" : Model.LibrosPopulares[i].RutaFoto)" asp-append-version /></td>
                           <td>@(Model.LibrosNuevos[i].Calificacion)</td>
+                      </tr>
+                  }
+              </tbody>
+          </table>
+
+        <p>Libros Elegidos</p>
+                    <table>
+              <thead>
+                  <tr>
+                      <th>Titulo</th>
+                      <th>Editorial</th>
+                      <th>Imagen</th>
+                      <th>Calificacion</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  @for (int i = 0; i < Model.LibrosElegidos.Count(); i++)
+                  {
+                      <tr>
+                          <td>@(Model.LibrosElegidos[i].Titulo.titulo)</td>
+                          <td>@(Model.LibrosElegidos[i].Editorial.editorial)</td>
+                          <td><img src="@(string.IsNullOrEmpty(Model.LibrosElegidos[i].RutaFoto) ? "/images/DefaultTapaLibro.jpg" : Model.LibrosPopulares[i].RutaFoto)" asp-append-version /></td>
+                          <td>@(Model.LibrosElegidos[i].Calificacion)</td>
                       </tr>
                   }
               </tbody>

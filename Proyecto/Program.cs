@@ -38,7 +38,13 @@ using (var scope = app.Services.CreateScope())
     var repoLibro = services.GetRequiredService<IRepoLibro>();
     var repoPrestamo = services.GetRequiredService<IRepoPrestamo>();
     var repoEjemplar = services.GetRequiredService<IRepoEjemplar>();
-    SeedData.Initialize(repoOperador, repoEjemplar, repoPrestamo, repoSocio, repoLibro);
+    var repoEditorial = services.GetRequiredService<IRepoEditorial>();
+    var repoAutor = services.GetRequiredService<IRepoAutor>();
+    var repoTitulo = services.GetRequiredService<IRepoTitulo>();
+    var repoAutorTitulo = services.GetRequiredService<IRepoAutorTitulo>();
+    var repoGenero = services.GetRequiredService<IRepoGenero>();
+    var repoGeneroTitulo = services.GetRequiredService<IRepoGeneroTitulo>();
+    SeedData.Initialize(repoOperador, repoEjemplar, repoPrestamo, repoSocio, repoLibro, repoEditorial, repoAutor, repoTitulo, repoAutorTitulo, repoGenero, repoGeneroTitulo);
 }
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -166,12 +166,13 @@ public class HomeController : Controller
         var idsLibrosMasPrestados = librosMasPrestados.Select(l => l.IdLibro).ToList();
         
         model.LibrosPopulares = _repoLibro.SelectWhere(libro => idsLibrosMasPrestados.Contains(libro.IdLibro)).Include(libro => libro.Titulo).Include(libro => libro.Editorial).ToList();
-
-        var titulosLibrosPopulares = model.LibrosPopulares.Select(libro => libro.Titulo).ToList();
         
         var librosElegidos = _repoLibro.Select().OrderByDescending(x => x.Calificacion).Take(10).ToList();
+        model.LibrosElegidos = librosElegidos;
+
         var generos = _repoGenero.Select().ToList();
         model.Generos = generos;
+
         return View(model);
     }
 
