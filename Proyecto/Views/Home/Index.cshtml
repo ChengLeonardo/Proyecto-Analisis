@@ -18,7 +18,7 @@
                     <tr>
                         <td>@(Model.Generos[i].genero)</td>
                         <td>
-                            <td><img src="@("/images/" + (Model.Generos[i].RutaFoto ?? "DefaultTapaLibro.jpg"))" asp-append-version /></td>
+                            <td><img src="@("/images/" + (Model.Generos[i].RutaFoto ?? "DefaultGenero.png"))" asp-append-version /></td>
                         </td>
                         <td>
                             <a asp-controller="Home" asp-action="LibrosGeneros" asp-route-id="@Model.Generos[i].IdGenero" class="btn btn-primary">Detalle</a>

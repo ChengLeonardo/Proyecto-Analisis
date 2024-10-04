@@ -155,26 +155,40 @@ public class HomeController : Controller
 
         var prestamos = _repoPrestamo.Select().Include(p => p.Ejemplar).ToList();
 
+        // Obtener los libros más prestados, agrupando por ID de libro
         var librosMasPrestados = prestamos
-            .GroupBy(p => p.Ejemplar.IdLibro) // Agrupar por idLibro
+            .GroupBy(p => p.Ejemplar.IdLibro) // Agrupar por IdLibro
             .Select(g => new
             {
                 IdLibro = g.Key,
-                CantidadPrestamos = g.Count() // Contar cuántos préstamos hay por libro
+                CantidadPrestamos = g.Count() // Contar los préstamos por libro
             })
-            .OrderByDescending(x => x.CantidadPrestamos) // Ordenar por cantidad de préstamos
-            .Take(10) // Limitar a los 10 libros más prestados (puedes cambiar el número según lo necesites)
+            .OrderByDescending(x => x.CantidadPrestamos) // Ordenar por cantidad de préstamos (ascendente)
+            .Take(10) // Limitar a los 10 libros más prestados
             .ToList();
 
-        var LibrosNuevos = _repoLibro.Select().Include(x => x.Editorial).Include(x => x.Titulo).OrderByDescending(x => x.FechaAgregada) // Ordenar por cantidad de préstamos
-            .Take(10)
-            .ToList(); // Limitar a los 10 libros más prestados (puedes cambiar el número según lo necesites)
+        System.Console.WriteLine(librosMasPrestados.Count());
 
+        // Obtener los libros nuevos, ordenando por fecha agregada de forma descendente
+        var LibrosNuevos = _repoLibro.Select()
+            .Include(x => x.Editorial)
+            .Include(x => x.Titulo)
+            .OrderByDescending(x => x.FechaAgregada) // Ordenar por fecha de agregación
+            .Take(10) // Limitar a los 10 libros más nuevos
+            .ToList();
+
+        // Asignar los libros nuevos al modelo
         model.LibrosNuevos = LibrosNuevos;
+
+        // Obtener los IDs de los libros más prestados
         var idsLibrosMasPrestados = librosMasPrestados.Select(l => l.IdLibro).ToList();
 
-        model.LibrosPopulares = _repoLibro.SelectWhere(libro => idsLibrosMasPrestados.Contains(libro.IdLibro)).Include(libro => libro.Titulo).Include(libro => libro.Editorial).ToList();
-        
+        // Obtener los libros populares basados en los IDs de libros más prestados
+        model.LibrosPopulares = _repoLibro.SelectWhere(libro => idsLibrosMasPrestados.Contains(libro.IdLibro))
+            .Include(libro => libro.Titulo)
+            .Include(libro => libro.Editorial)
+            .ToList();
+
         var librosElegidos = _repoLibro.Select().OrderByDescending(x => x.Calificacion).Take(10).ToList();
         model.LibrosElegidos = librosElegidos;
 
