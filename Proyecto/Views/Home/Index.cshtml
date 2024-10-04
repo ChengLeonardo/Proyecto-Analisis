@@ -1,7 +1,6 @@
 ﻿@model Proyecto.Models.HomeIndexViewModel;
 
 <div class="text-center">
-    <form asp-action="DetalleLibro" method="post">
         <p>Categorias</p>
         <table>
             <thead>
@@ -19,7 +18,10 @@
                     <tr>
                         <td>@(Model.Generos[i].genero)</td>
                         <td>
-                            <img src="@(string.IsNullOrEmpty(Model.Generos[i].RutaFoto) ? "/images/DefaultGenero.png" : Model.Generos[i].RutaFoto)" asp-append-version />
+                            <td><img src="@("/images/" + (Model.Generos[i].RutaFoto ?? "DefaultTapaLibro.jpg"))" asp-append-version /></td>
+                        </td>
+                        <td>
+                            <a asp-controller="Home" asp-action="LibrosGeneros" asp-route-id="@Model.Generos[i].IdGenero" class="btn btn-primary">Detalle</a>
                             @if (Model.Administrador) // Verifica si es administrador
                             {
                                 <a asp-controller="Home" asp-action="ModificarGenero" asp-route-id="@Model.Generos[i].IdGenero" class="btn btn-primary">Modificar</a>
@@ -51,9 +53,10 @@
                     <tr>
                         <td>@(Model.LibrosPopulares[i].Titulo.titulo)</td>
                         <td>@(Model.LibrosPopulares[i].Editorial.editorial)</td>
-                        <td><img src="@(string.IsNullOrEmpty(Model.LibrosPopulares[i].RutaFoto) ? "/images/DefaultTapaLibro.jpg" : Model.LibrosPopulares[i].RutaFoto)" asp-append-version /></td>
+                        <td><img src="@("/images/" + (Model.LibrosPopulares[i].RutaFoto ?? "DefaultTapaLibro.jpg"))" asp-append-version /></td>
                         <td>@(Model.LibrosPopulares[i].Calificacion)</td>
                         <td>
+                            <a asp-controller="Home" asp-action="DetalleLibro" asp-route-id="@Model.LibrosPopulares[i].IdLibro" class="btn btn-primary">Detalle</a>
                             @if (Model.Administrador) // Verifica si es administrador
                             {
                                 <a asp-controller="Home" asp-action="ModificarLibro" asp-route-id="@Model.LibrosPopulares[i].IdLibro" class="btn btn-primary">Modificar</a>
@@ -85,9 +88,10 @@
                     <tr>
                         <td>@(Model.LibrosNuevos[i].Titulo.titulo)</td>
                         <td>@(Model.LibrosNuevos[i].Editorial.editorial)</td>
-                        <td><img src="@(string.IsNullOrEmpty(Model.LibrosNuevos[i].RutaFoto) ? "/images/DefaultTapaLibro.jpg" : Model.LibrosNuevos[i].RutaFoto)" asp-append-version /></td>
+                        <td><img src="@("/images/" + (Model.LibrosNuevos[i].RutaFoto ?? "DefaultTapaLibro.jpg"))" asp-append-version /></td>
                         <td>@(Model.LibrosNuevos[i].Calificacion)</td>
                         <td>
+                            <a asp-controller="Home" asp-action="DetalleLibro" asp-route-id="@Model.LibrosNuevos[i].IdLibro" class="btn btn-primary">Detalle</a>
                             @if (Model.Administrador) // Verifica si es administrador
                             {
                                 <a asp-controller="Home" asp-action="ModificarLibro" asp-route-id="@Model.LibrosNuevos[i].IdLibro" class="btn btn-primary">Modificar</a>
@@ -119,20 +123,22 @@
                     <tr>
                         <td>@(Model.LibrosElegidos[i].Titulo.titulo)</td>
                         <td>@(Model.LibrosElegidos[i].Editorial.editorial)</td>
-                        <td><img src="@(string.IsNullOrEmpty(Model.LibrosElegidos[i].RutaFoto) ? "/images/DefaultTapaLibro.jpg" : Model.LibrosElegidos[i].RutaFoto)" asp-append-version /></td>
+                        <td><img src="@("/images/" + (Model.LibrosElegidos[i].RutaFoto ?? "DefaultTapaLibro.jpg"))" asp-append-version /></td>
                         <td>@(Model.LibrosElegidos[i].Calificacion)</td>
                         <td>
+                            <a asp-controller="Home" asp-action="DetalleLibro" asp-route-id="@Model.LibrosElegidos[i].IdLibro" class="btn btn-primary">Detalle</a>
                             @if (Model.Administrador) // Verifica si es administrador
                             {
                                 <a asp-controller="Home" asp-action="ModificarLibro" asp-route-id="@Model.LibrosElegidos[i].IdLibro" class="btn btn-primary">Modificar</a>
                                 <a asp-controller="Home" asp-action="EliminarLibro" asp-route-id="@Model.LibrosElegidos[i].IdLibro" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este libro?');">Eliminar</a>
                             }
+
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-    </form>
+
 
     <form asp-controller="Home" asp-action="Logout" method="post">
         @Html.AntiForgeryToken()

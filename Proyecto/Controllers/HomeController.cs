@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Proyecto.Interfaces;
 using Proyecto.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 
 namespace Proyecto.Controllers;
@@ -17,14 +19,20 @@ public class HomeController : Controller
     private IRepoGenero _repoGenero;
     private IRepoEjemplar _repoEjemplar;
     private IRepoPrestamo _repoPrestamo;
+    private readonly IWebHostEnvironment _environment;
+    private readonly IRepoEditorial _repoEditorial;
+    private readonly IRepoTitulo _repoTitulo;
 
-    public HomeController(IRepoOperador repoOperador, IRepoGenero repoGenero, IRepoEjemplar repoEjemplar, IRepoLibro repoLibro, IRepoPrestamo repoPrestamo)
+    public HomeController(IRepoOperador repoOperador, IRepoGenero repoGenero, IRepoEjemplar repoEjemplar, IRepoLibro repoLibro, IRepoPrestamo repoPrestamo, IWebHostEnvironment environment, IRepoEditorial repoEditorial, IRepoTitulo repoTitulo)
     {
         _repoOperador = repoOperador;
         _repoLibro = repoLibro;
         _repoGenero = repoGenero;
         _repoEjemplar = repoEjemplar;
         _repoPrestamo = repoPrestamo;
+        _environment = environment;
+        _repoEditorial = repoEditorial;
+        _repoTitulo = repoTitulo;
     }
 
     [HttpGet]
@@ -177,12 +185,122 @@ public class HomeController : Controller
         return View(model);
     }
 
-    public IActionResult ModificarLibro()
+    public IActionResult ModificarLibro(int id)
     {
-        return View();
+        var libro = _repoLibro.SelectWhere(x => x.IdLibro == id).Include(x => x.Editorial).Include(x => x.Titulo).FirstOrDefault();
+
+        ModificarLibroViewModel model = new ModificarLibroViewModel{IdLibro = libro.IdLibro, Calificacion = libro.Calificacion, Editorial = libro.Editorial.editorial, FechaAgregada = libro.FechaAgregada, ISBN = libro.ISBN, RutaFoto = libro.RutaFoto, Titulo = libro.Titulo.titulo};
+
+        return View(model);
     }
-    public IActionResult ModificarGenero()
+    [HttpPost]
+    public async Task<IActionResult> ModificarLibro(ModificarLibroViewModel model)
     {
+        if (ModelState.IsValid)
+        {
+            if(model.Calificacion < 0 || model.Calificacion > 5)
+            {
+                ModelState.AddModelError("Calificacion", "La calificación debe estar entre 0 y 5.");
+                return View(model);
+            }
+            string uniqueFileName = null;
+
+            var Editorial = _repoEditorial.SelectWhere(x => x.editorial == model.Editorial).FirstOrDefault();
+            if (Editorial == null)
+            {
+                ModelState.AddModelError("Editorial", "Editorial no existe");
+                return View(model);
+            }
+
+            // Obtener el libro actual de la base de datos
+            var libro = _repoLibro.SelectWhere(l => l.IdLibro == model.IdLibro)
+                     .Include(l => l.Titulo)  // Incluye la relación Titulo
+                     .FirstOrDefault();
+
+            var Titulo = _repoTitulo.SelectWhere(x => x.titulo == model.Titulo).Include(x => x.Generos).Include(x => x.Autores).Include(x => x.Libros).FirstOrDefault();
+            if (Titulo == null)
+            {
+                var autor = _repoLibro.Select()
+                    .Where(libro => libro.IdLibro == model.IdLibro)
+                    .SelectMany(libro => libro.Titulo.Autores)
+                    .FirstOrDefault();
+
+                List<Genero> generos = _repoLibro.Select()
+                    .Where(libro => libro.IdLibro == model.IdLibro)
+                    .SelectMany(libro => libro.Titulo.Generos)
+                    .ToList();
+
+                Titulo titulo = new Titulo
+                {
+                    Autores = new List<Autor> { autor },
+                    Generos = generos,
+                    IdTitulo = 0,
+                    Libros = new List<Libro>(),
+                    titulo = model.Titulo
+                };
+                libro.Titulo = titulo;
+            }
+            else
+            {
+                libro.Titulo = Titulo;
+            }
+
+            // Si hay una nueva foto, manejar la subida
+            if (model.Foto != null)
+            {
+                // Eliminar la foto anterior si existe
+                if (!string.IsNullOrEmpty(libro.RutaFoto))
+                {
+                    string previousFilePath = Path.Combine(_environment.WebRootPath, "images", libro.RutaFoto);
+                    if (System.IO.File.Exists(previousFilePath))
+                    {
+                        System.IO.File.Delete(previousFilePath);
+                    }
+                }
+
+                // Guardar la nueva foto
+                string uploadsFolder = Path.Combine(_environment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Foto.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.Foto.CopyToAsync(fileStream);
+                }
+
+                libro.RutaFoto = uniqueFileName;
+            }
+
+            // Actualizar los demás campos del libro
+            libro.ISBN = model.ISBN;
+            libro.FechaAgregada = model.FechaAgregada;
+            libro.Calificacion = model.Calificacion;
+            libro.Editorial = Editorial;
+
+            _repoLibro.Update(libro);
+
+            return RedirectToAction("DetalleLibro", "Home", new { id = libro.IdLibro });
+        }
+        // if (!ModelState.IsValid)
+        // {
+        //     foreach (var state in ModelState)
+        //     {
+        //         foreach (var error in state.Value.Errors)
+        //         {
+        //             Console.WriteLine($"Error en el campo {state.Key}: {error.ErrorMessage}");
+        //         }
+        //     }
+        //     return View(model);
+        // }
+
+
+        return View(model);
+    }
+
+
+    public IActionResult ModificarGenero(uint IdGenero)
+    {
+
         return View();
     }
 
