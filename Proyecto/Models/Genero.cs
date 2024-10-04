@@ -6,5 +6,5 @@ public class Genero
     public string genero { get; set; }
     public string? RutaFoto { get; set; }
 
-    public ICollection<GeneroTitulo> GeneroTitulos { get; set; } // Relación 1:N con GeneroTitulo
+    public ICollection<Titulo>? Titulos { get; set; } // Relación 1:N con GeneroTitulo
 }

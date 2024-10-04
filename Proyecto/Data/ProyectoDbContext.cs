@@ -10,12 +10,10 @@ public class ProyectoDbContext : DbContext
     public DbSet<Socio> Socio { get; set; }
     public DbSet<Titulo> Titulo { get; set; }
     public DbSet<Libro> Libro { get; set; }
-    public DbSet<AutorTitulo> AutorTitulo { get; set; }
     public DbSet<Ejemplar> Ejemplar { get; set; }
     public DbSet<Operador> Operador { get; set; }
     public DbSet<Prestamo> Prestamo { get; set; }
     public DbSet<Genero> Genero { get; set; }
-    public DbSet<GeneroTitulo> GeneroTitulo { get; set; }
 
     public ProyectoDbContext(DbContextOptions<ProyectoDbContext> options) : base(options)
     {
@@ -36,28 +34,34 @@ public class ProyectoDbContext : DbContext
             .HasKey(a => a.IdAutor);
 
         modelBuilder.Entity<Autor>()
-            .HasMany(a => a.AutorTitulos)
-            .WithOne(at => at.Autor)
-            .HasForeignKey(at => at.IdAutor);
+            .HasMany(a => a.Titulos)
+            .WithMany(t => t.Autores)
+            .UsingEntity<Dictionary<string, object>>(
+                "AutorTitulo", // Nombre de la tabla intermedia
+                j => j.HasOne<Titulo>().WithMany().HasForeignKey("IdTitulo"),
+                j => j.HasOne<Autor>().WithMany().HasForeignKey("IdAutor"));
+
 
         // Configuración para Titulo
         modelBuilder.Entity<Titulo>()
             .HasKey(t => t.IdTitulo);
 
         modelBuilder.Entity<Titulo>()
-            .HasMany(t => t.AutorTitulos)
-            .WithOne(at => at.Titulo)
-            .HasForeignKey(at => at.IdTitulo);
+            .HasMany(t => t.Autores)
+            .WithMany(at => at.Titulos)
+            .UsingEntity(j => j.ToTable("AutorTitulo"));
 
+            
         modelBuilder.Entity<Titulo>()
             .HasMany(t => t.Libros)
             .WithOne(l => l.Titulo)
             .HasForeignKey(l => l.IdTitulo);
 
         modelBuilder.Entity<Titulo>()
-            .HasMany(t => t.GeneroTitulos)
-            .WithOne(gt => gt.Titulo)
-            .HasForeignKey(gt => gt.IdTitulo);
+            .HasMany(t => t.Generos)
+            .WithMany(gt => gt.Titulos)
+            .UsingEntity(j => j.ToTable("GeneroTitulo"));
+
 
         // Configuración para Libro
         modelBuilder.Entity<Libro>()
@@ -67,10 +71,6 @@ public class ProyectoDbContext : DbContext
             .HasMany(l => l.Ejemplares)
             .WithOne(e => e.Libro)
             .HasForeignKey(e => e.IdLibro);
-
-        // Configuración para AutorTitulo
-        modelBuilder.Entity<AutorTitulo>()
-            .HasKey(at => new { at.IdAutor, at.IdTitulo });
 
         // Configuración para Ejemplar
         modelBuilder.Entity<Ejemplar>()
@@ -86,13 +86,13 @@ public class ProyectoDbContext : DbContext
             .HasKey(g => g.IdGenero);
 
         modelBuilder.Entity<Genero>()
-            .HasMany(g => g.GeneroTitulos)
-            .WithOne(gt => gt.Genero)
-            .HasForeignKey(gt => gt.IdGenero);
+            .HasMany(g => g.Titulos)
+            .WithMany(t => t.Generos)
+            .UsingEntity<Dictionary<string, object>>(
+                "GeneroTitulo", // Nombre de la tabla intermedia
+                j => j.HasOne<Titulo>().WithMany().HasForeignKey("IdTitulo"),
+                j => j.HasOne<Genero>().WithMany().HasForeignKey("IdGenero"));
 
-        // Configuración para GeneroTitulo
-        modelBuilder.Entity<GeneroTitulo>()
-            .HasKey(gt => new { gt.IdGenero, gt.IdTitulo });
 
         // Configuración para Operador
         modelBuilder.Entity<Operador>()

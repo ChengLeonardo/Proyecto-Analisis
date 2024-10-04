@@ -9,6 +9,6 @@ public class Operador
     public string Usuario { get; set; }
     public string Pass { get; set; }
 
-    public ICollection<Prestamo> PrestamosEntregados { get; set; } // Relación 1:N con Prestamo
-    public ICollection<Prestamo> PrestamosRegresados { get; set; } // Relación 1:N con Prestamo
+    public List<Prestamo> PrestamosEntregados { get; set; } // Relación 1:N con Prestamo
+    public List<Prestamo> PrestamosRegresados { get; set; } // Relación 1:N con Prestamo
 }

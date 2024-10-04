@@ -158,22 +158,32 @@ public class HomeController : Controller
             .Take(10) // Limitar a los 10 libros más prestados (puedes cambiar el número según lo necesites)
             .ToList();
 
-        var LibrosNuevos = _repoLibro.Select().OrderByDescending(x => x.FechaAgregada) // Ordenar por cantidad de préstamos
+        var LibrosNuevos = _repoLibro.Select().Include(x => x.Editorial).Include(x => x.Titulo).OrderByDescending(x => x.FechaAgregada) // Ordenar por cantidad de préstamos
             .Take(10)
             .ToList(); // Limitar a los 10 libros más prestados (puedes cambiar el número según lo necesites)
 
         model.LibrosNuevos = LibrosNuevos;
         var idsLibrosMasPrestados = librosMasPrestados.Select(l => l.IdLibro).ToList();
-        
+
         model.LibrosPopulares = _repoLibro.SelectWhere(libro => idsLibrosMasPrestados.Contains(libro.IdLibro)).Include(libro => libro.Titulo).Include(libro => libro.Editorial).ToList();
         
         var librosElegidos = _repoLibro.Select().OrderByDescending(x => x.Calificacion).Take(10).ToList();
         model.LibrosElegidos = librosElegidos;
 
         var generos = _repoGenero.Select().ToList();
+
         model.Generos = generos;
 
         return View(model);
+    }
+
+    public IActionResult ModificarLibro()
+    {
+        return View();
+    }
+    public IActionResult ModificarGenero()
+    {
+        return View();
     }
 
     public IActionResult Privacy()

@@ -12,10 +12,8 @@ var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ProyectoDbContext>(dbContextOptions => dbContextOptions.UseMySql(connectionString, serverVersion));
 builder.Services.AddScoped<IRepoAutor, RepoAutor>();
-builder.Services.AddScoped<IRepoAutorTitulo, RepoAutorTitulo>();
 builder.Services.AddScoped<IRepoEditorial, RepoEditorial>();
 builder.Services.AddScoped<IRepoEjemplar, RepoEjemplar>();
-builder.Services.AddScoped<IRepoGeneroTitulo, RepoGeneroTitulo>();
 builder.Services.AddScoped<IRepoLibro, RepoLibro>();
 builder.Services.AddScoped<IRepoOperador, RepoOperador>();
 builder.Services.AddScoped<IRepoPrestamo, RepoPrestamo>();
@@ -41,10 +39,9 @@ using (var scope = app.Services.CreateScope())
     var repoEditorial = services.GetRequiredService<IRepoEditorial>();
     var repoAutor = services.GetRequiredService<IRepoAutor>();
     var repoTitulo = services.GetRequiredService<IRepoTitulo>();
-    var repoAutorTitulo = services.GetRequiredService<IRepoAutorTitulo>();
     var repoGenero = services.GetRequiredService<IRepoGenero>();
-    var repoGeneroTitulo = services.GetRequiredService<IRepoGeneroTitulo>();
-    SeedData.Initialize(repoOperador, repoEjemplar, repoPrestamo, repoSocio, repoLibro, repoEditorial, repoAutor, repoTitulo, repoAutorTitulo, repoGenero, repoGeneroTitulo);
+
+    SeedData.Initialize(repoOperador, repoEjemplar, repoPrestamo, repoSocio, repoLibro, repoEditorial, repoAutor, repoTitulo, repoGenero);
 }
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

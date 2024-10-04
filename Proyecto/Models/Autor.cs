@@ -6,5 +6,5 @@ public class Autor
     public string Nombre { get; set; }
     public string Apellido { get; set; }
 
-    public ICollection<AutorTitulo> AutorTitulos { get; set; } // Relación 1:N con AutorTitulo
+    public ICollection<Titulo> Titulos { get; set; } // Relación 1:N con AutorTitulo
 }

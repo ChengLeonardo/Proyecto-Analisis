@@ -244,118 +244,118 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
 -- Data for table `5to_Biblioteca`.`Editorial`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `5to_Biblioteca`;
-INSERT INTO `5to_Biblioteca`.`Editorial` (`idEditorial`, `Editorial`) VALUES (1, 'Planeta');
+-- -- -----------------------------------------------------
+-- START TRANSACTION;
+-- USE `5to_Biblioteca`;
+-- INSERT INTO `5to_Biblioteca`.`Editorial` (`idEditorial`, `Editorial`) VALUES (1, 'Planeta');
 
 
-COMMIT;
-
-
-
-
--- -----------------------------------------------------
--- Data for table `5to_Biblioteca`.`Autor`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `5to_Biblioteca`;
-INSERT INTO `5to_Biblioteca`.`Autor` (`idAutor`, `nombre`, `apellido`) VALUES (1, 'Roberto', 'Arlt');
-
-
-COMMIT;
+-- COMMIT;
 
 
 
 
--- -----------------------------------------------------
--- Data for table `5to_Biblioteca`.`Socio`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `5to_Biblioteca`;
-INSERT INTO `5to_Biblioteca`.`Socio` (`idSocio`, `nombre`, `apellido`, `email`, `telefono`, `fechaNacimiento`) VALUES (100, 'Matias', 'Tolaba', NULL, NULL, '2006-05-15');
+-- -- -----------------------------------------------------
+-- -- Data for table `5to_Biblioteca`.`Autor`
+-- -- -----------------------------------------------------
+-- START TRANSACTION;
+-- USE `5to_Biblioteca`;
+-- INSERT INTO `5to_Biblioteca`.`Autor` (`idAutor`, `nombre`, `apellido`) VALUES (1, 'Roberto', 'Arlt');
 
 
-COMMIT;
-
-
-
-
--- -----------------------------------------------------
--- Data for table `5to_Biblioteca`.`Titulo`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `5to_Biblioteca`;
-INSERT INTO `5to_Biblioteca`.`Titulo` (`idTitulo`, `titulo`) VALUES (1, 'El Juguete Rabioso');
-
-
-COMMIT;
+-- COMMIT;
 
 
 
 
--- -----------------------------------------------------
--- Data for table `5to_Biblioteca`.`Libro`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `5to_Biblioteca`;
-INSERT INTO `5to_Biblioteca`.`Libro` (`idLibro`, `idEditorial`, `idTitulo`, `ISBN`, fechaAgregada, calificacion) VALUES (10, 1, 1, '123456', CURRENT_DATE(), 4.0);
+-- -- -----------------------------------------------------
+-- -- Data for table `5to_Biblioteca`.`Socio`
+-- -- -----------------------------------------------------
+-- START TRANSACTION;
+-- USE `5to_Biblioteca`;
+-- INSERT INTO `5to_Biblioteca`.`Socio` (`idSocio`, `nombre`, `apellido`, `email`, `telefono`, `fechaNacimiento`) VALUES (100, 'Matias', 'Tolaba', NULL, NULL, '2006-05-15');
 
 
-COMMIT;
-
-
-
-
--- -----------------------------------------------------
--- Data for table `5to_Biblioteca`.`AutorTitulo`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `5to_Biblioteca`;
-INSERT INTO `5to_Biblioteca`.`AutorTitulo` (`idAutor`, `idTitulo`) VALUES (1, 1);
-
-
-COMMIT;
+-- COMMIT;
 
 
 
 
--- -----------------------------------------------------
--- Data for table `5to_Biblioteca`.`Ejemplar`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `5to_Biblioteca`;
-INSERT INTO `5to_Biblioteca`.`Ejemplar` (`idEjemplar`, `idLibro`, `nroEjemplar`) VALUES (1, 10, 1);
-INSERT INTO `5to_Biblioteca`.`Ejemplar` (`idEjemplar`, `idLibro`, `nroEjemplar`) VALUES (2, 10, 2);
-INSERT INTO `5to_Biblioteca`.`Ejemplar` (`idEjemplar`, `idLibro`, `nroEjemplar`) VALUES (3, 10, 3);
+-- -- -----------------------------------------------------
+-- -- Data for table `5to_Biblioteca`.`Titulo`
+-- -- -----------------------------------------------------
+-- START TRANSACTION;
+-- USE `5to_Biblioteca`;
+-- INSERT INTO `5to_Biblioteca`.`Titulo` (`idTitulo`, `titulo`) VALUES (1, 'El Juguete Rabioso');
 
 
-COMMIT;
-
-
-
-
--- -----------------------------------------------------
--- Data for table `5to_Biblioteca`.`Genero`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `5to_Biblioteca`;
-INSERT INTO `5to_Biblioteca`.`Genero` (`idGenero`, `genero`) VALUES (1, 'Ficción');
-
-
-COMMIT;
+-- COMMIT;
 
 
 
 
--- -----------------------------------------------------
--- Data for table `5to_Biblioteca`.`GeneroTitulo`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `5to_Biblioteca`;
-INSERT INTO `5to_Biblioteca`.`GeneroTitulo` (`idGenero`, `idTitulo`) VALUES (1, 1);
+-- -- -----------------------------------------------------
+-- -- Data for table `5to_Biblioteca`.`Libro`
+-- -- -----------------------------------------------------
+-- START TRANSACTION;
+-- USE `5to_Biblioteca`;
+-- INSERT INTO `5to_Biblioteca`.`Libro` (`idLibro`, `idEditorial`, `idTitulo`, `ISBN`, fechaAgregada, calificacion) VALUES (10, 1, 1, '123456', CURRENT_DATE(), 4.0);
 
 
-COMMIT;
+-- COMMIT;
+
+
+
+
+-- -- -----------------------------------------------------
+-- -- Data for table `5to_Biblioteca`.`AutorTitulo`
+-- -- -----------------------------------------------------
+-- START TRANSACTION;
+-- USE `5to_Biblioteca`;
+-- INSERT INTO `5to_Biblioteca`.`AutorTitulo` (`idAutor`, `idTitulo`) VALUES (1, 1);
+
+
+-- COMMIT;
+
+
+
+
+-- -- -----------------------------------------------------
+-- -- Data for table `5to_Biblioteca`.`Ejemplar`
+-- -- -----------------------------------------------------
+-- START TRANSACTION;
+-- USE `5to_Biblioteca`;
+-- INSERT INTO `5to_Biblioteca`.`Ejemplar` (`idEjemplar`, `idLibro`, `nroEjemplar`) VALUES (1, 10, 1);
+-- INSERT INTO `5to_Biblioteca`.`Ejemplar` (`idEjemplar`, `idLibro`, `nroEjemplar`) VALUES (2, 10, 2);
+-- INSERT INTO `5to_Biblioteca`.`Ejemplar` (`idEjemplar`, `idLibro`, `nroEjemplar`) VALUES (3, 10, 3);
+
+
+-- COMMIT;
+
+
+
+
+-- -- -----------------------------------------------------
+-- -- Data for table `5to_Biblioteca`.`Genero`
+-- -- -----------------------------------------------------
+-- START TRANSACTION;
+-- USE `5to_Biblioteca`;
+-- INSERT INTO `5to_Biblioteca`.`Genero` (`idGenero`, `genero`) VALUES (1, 'Ficción');
+
+
+-- COMMIT;
+
+
+
+
+-- -- -----------------------------------------------------
+-- -- Data for table `5to_Biblioteca`.`GeneroTitulo`
+-- -- -----------------------------------------------------
+-- START TRANSACTION;
+-- USE `5to_Biblioteca`;
+-- INSERT INTO `5to_Biblioteca`.`GeneroTitulo` (`idGenero`, `idTitulo`) VALUES (1, 1);
+
+
+-- COMMIT;
 
 
