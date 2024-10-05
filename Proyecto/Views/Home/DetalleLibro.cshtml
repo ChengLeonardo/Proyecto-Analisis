@@ -1,0 +1,21 @@
+@model Proyecto.Models.DetalleLibroViewModel;
+
+<div class="container">
+    <h1>@Model.Titulo</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <img src="@("/images/" + (Model.RutaFoto ?? "DefaultTapaLibro.jpg"))" class="img-fluid" asp-append-version="true" alt="@Model.Titulo" />
+        </div>
+        <div class="col-md-8">
+            <p><strong>Autor:</strong> @($"{Model.NombreAutor} {Model.ApellidoAutor}")</p>
+            <p><strong>ISBN:</strong> @Model.ISBN</p>
+            <p><strong>Fecha de agregado:</strong> @Model.FechaAgregada.ToShortDateString()</p>
+            <p><strong>Editorial:</strong> @Model.Editorial</p>
+            <p><strong>Calificación:</strong> @Model.Calificacion.ToString("F1") / 5.0</p>
+            <p><strong>Precio:</strong> @Model.Precio.ToString("C")</p>
+            <p><strong>Descripción:</strong> @Model.Descripcion</p>
+            <p><strong>Género:</strong> @Model.Genero</p>
+            <p><strong>Stock:</strong> @Model.Stock</p>
+        </div>
+    </div>
+</div>

@@ -328,4 +328,94 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
+    public IActionResult DetalleLibro(int id)
+    {
+        var libro = _repoLibro.SelectWhere(l => l.IdLibro == id)
+            .Include(l => l.Editorial)
+            .Include(l => l.Titulo)
+                .ThenInclude(t => t.Autores)
+            .Include(l => l.Titulo)
+                .ThenInclude(t => t.Generos)    
+            .FirstOrDefault();
+
+        if (libro == null)
+        {
+            return NotFound();
+        }
+
+        var ejemplares = _repoEjemplar.SelectWhere(e => e.IdLibro == id).ToList();
+
+        var viewModel = new DetalleLibroViewModel
+        {
+            IdLibro = libro.IdLibro,
+            Titulo = libro.Titulo.titulo,
+            ISBN = libro.ISBN,
+            RutaFoto = libro.RutaFoto,
+            FechaAgregada = libro.FechaAgregada,
+            Calificacion = libro.Calificacion,
+            Editorial = libro.Editorial.editorial,
+            NombreAutor = libro.Titulo.Autores.FirstOrDefault()?.Nombre ?? "",
+            ApellidoAutor = libro.Titulo.Autores.FirstOrDefault()?.Apellido ?? "",
+            Genero = libro.Titulo.Generos.FirstOrDefault()?.genero ?? "",
+            Stock = ejemplares.Count,
+            // 注意：价格和描述字段在当前模型中不存在，您可能需要添加这些字段或从其他地方获取
+            Precio = 0, // 临时设置为0
+            Descripcion = "描述暂缺" // 临时设置
+        };
+
+        return View(viewModel);
+    }
+
+    public IActionResult BuscarLibro(string query)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            return View(new List<Libro>());
+        }
+
+        // 首先从数据库获取所有书籍和标题
+        var librosConTitulos = _repoLibro.Select()
+            .Include(l => l.Titulo)
+            .Include(l => l.Editorial)
+            .AsEnumerable() // 将查询结果加载到内存中
+            .Select(l => new
+            {
+                Libro = l,
+                Similitud = CalcularSimilitud(query, l.Titulo.titulo)
+            })
+            .Where(x => x.Similitud >= 0.7) // 在内存中进行过滤
+            .OrderByDescending(x => x.Similitud)
+            .Select(x => x.Libro)
+            .ToList();
+
+        return View(librosConTitulos);
+    }
+
+
+    private double CalcularSimilitud(string s, string t)
+    {
+        int n = s.Length;
+        int m = t.Length;
+        int[,] d = new int[n + 1, m + 1];
+
+        if (n == 0) return m;
+        if (m == 0) return n;
+
+        for (int i = 0; i <= n; d[i, 0] = i++) { }
+        for (int j = 0; j <= m; d[0, j] = j++) { }
+
+        for (int i = 1; i <= n; i++)
+        {
+            for (int j = 1; j <= m; j++)
+            {
+                int cost = (t[j - 1] == s[i - 1]) ? 0 : 1;
+                d[i, j] = Math.Min(
+                    Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1),
+                    d[i - 1, j - 1] + cost);
+            }
+        }
+
+        return 1.0 - ((double)d[n, m] / Math.Max(s.Length, t.Length));
+    }
 }
