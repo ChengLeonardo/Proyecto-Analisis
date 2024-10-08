@@ -20,6 +20,8 @@ builder.Services.AddScoped<IRepoPrestamo, RepoPrestamo>();
 builder.Services.AddScoped<IRepoSocio, RepoSocio>();
 builder.Services.AddScoped<IRepoTitulo, RepoTitulo>();
 builder.Services.AddScoped<IRepoGenero, RepoGenero>();
+builder.Services.AddScoped<IRepoUsuario, RepoUsuario>();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(options =>
         {
@@ -40,8 +42,9 @@ using (var scope = app.Services.CreateScope())
     var repoAutor = services.GetRequiredService<IRepoAutor>();
     var repoTitulo = services.GetRequiredService<IRepoTitulo>();
     var repoGenero = services.GetRequiredService<IRepoGenero>();
+    var repoUsuario = services.GetRequiredService<IRepoUsuario>();
 
-    SeedData.Initialize(repoOperador, repoEjemplar, repoPrestamo, repoSocio, repoLibro, repoEditorial, repoAutor, repoTitulo, repoGenero);
+    SeedData.Initialize(repoOperador, repoEjemplar, repoPrestamo, repoSocio, repoLibro, repoEditorial, repoAutor, repoTitulo, repoGenero, repoUsuario);
 }
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

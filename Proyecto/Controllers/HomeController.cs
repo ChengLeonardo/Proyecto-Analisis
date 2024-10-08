@@ -8,7 +8,11 @@ using Proyecto.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Proyecto.Models;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Proyecto.Controllers;
 
@@ -22,8 +26,9 @@ public class HomeController : Controller
     private readonly IWebHostEnvironment _environment;
     private readonly IRepoEditorial _repoEditorial;
     private readonly IRepoTitulo _repoTitulo;
-
-    public HomeController(IRepoOperador repoOperador, IRepoGenero repoGenero, IRepoEjemplar repoEjemplar, IRepoLibro repoLibro, IRepoPrestamo repoPrestamo, IWebHostEnvironment environment, IRepoEditorial repoEditorial, IRepoTitulo repoTitulo)
+    private readonly IRepoSocio _repoSocio;
+    private readonly IRepoUsuario _repoUsuario;
+    public HomeController(IRepoOperador repoOperador, IRepoSocio repoSocio, IRepoGenero repoGenero, IRepoEjemplar repoEjemplar, IRepoLibro repoLibro, IRepoPrestamo repoPrestamo, IWebHostEnvironment environment, IRepoEditorial repoEditorial, IRepoTitulo repoTitulo, IRepoUsuario repoUsuario)
     {
         _repoOperador = repoOperador;
         _repoLibro = repoLibro;
@@ -33,6 +38,8 @@ public class HomeController : Controller
         _environment = environment;
         _repoEditorial = repoEditorial;
         _repoTitulo = repoTitulo;
+        _repoSocio = repoSocio;
+        _repoUsuario = repoUsuario;
     }
 
     [HttpGet]
@@ -61,79 +68,108 @@ public class HomeController : Controller
             return RedirectToAction("Index", "Home");
         }
     }
+
     [HttpPost]
-    public async Task<IActionResult> Register(Operador model)
+    public async Task<IActionResult> Register(RegisterViewModel model)
     {
         if (ModelState.IsValid)
         {
-            var mailExistente = _repoOperador.SelectWhere(u => u.Usuario == model.Usuario).FirstOrDefault();
-            if(mailExistente != null)
+            var usuarioExistente = await _repoOperador.SelectWhere(o => o.Usuario.NombreUsuario == model.Usuario)
+                .Include(o => o.Usuario)
+                .Select(u => new { u.IdUsuario, u.Usuario.NombreUsuario, u.Usuario.TipoUsuarioId })
+                .FirstOrDefaultAsync();
+
+            if (usuarioExistente != null)
             {
-                ModelState.AddModelError("Usuario", "El usuario ya está en uso. Por favor, elige otro.");
+                ModelState.AddModelError("Usuario", "Nombre de usuario ya existe, use otro.");
                 return View(model);
             }
-            else
-            { 
-                var operador = new Operador
-                {
-                    Email = model.Email,
-                    Pass = BCrypt.Net.BCrypt.HashPassword(model.Pass),
-                    Apellido = model.Apellido,
-                    Nombre = model.Nombre,
-                    Usuario = model.Usuario,
-                    IdOperador = 0
-                };
 
-                var idAutoIncrementado = _repoOperador.Insert(operador, "IdOperador");
-                operador.IdOperador = idAutoIncrementado;
-
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, operador.IdOperador.ToString()),
-                };
-
-                // Crear la identidad y el principal
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);    
-                return RedirectToAction("Index", "Home");
+            if (model.TipoUsuario == 1 && model.CodigoOperador != "CodigoSecreto123")
+            {
+                ModelState.AddModelError("CodigoOperador", "Código de registro de operador inválido.");
+                return View(model);
             }
+
+            var nuevoUsuario = new Usuario
+            {
+                Nombre = model.Nombre,
+                Apellido = model.Apellido,
+                Email = model.Email,
+                NombreUsuario = model.Usuario,
+                Pass = BCrypt.Net.BCrypt.HashPassword(model.Pass),
+                TipoUsuarioId = model.TipoUsuario
+            };
+
+            if (model.TipoUsuario == 1)
+            {
+                var operador = new Operador { Usuario = nuevoUsuario };
+                _repoOperador.Insert(operador, "IdOperador");
+            }
+            else
+            {
+                var socio = new Socio 
+                { 
+                    Usuario = nuevoUsuario,
+                    // 如果需要，可以在这里添加 Telefono 和 FechaNacimiento
+                };
+                _repoSocio.Insert(socio, "IdSocio");
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, nuevoUsuario.IdUsuario.ToString(), ClaimValueTypes.String),
+                new Claim(ClaimTypes.Role, nuevoUsuario.TipoUsuario.ToString(), ClaimValueTypes.String)
+            };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);    
+            return RedirectToAction("Index", "Home");
         }
-        else
-        {
-            return View(model);
-        }
-        
+
+        return View(model);
     }
 
     [HttpPost]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
-        if(ModelState.IsValid)
+        if (ModelState.IsValid)
         {
-            var usuarioExistente = _repoOperador.SelectWhere(o => o.Usuario == model.Usuario).FirstOrDefault();
-
-            if(usuarioExistente != null)
+            Usuario usuario = null;
+            if (model.TipoUsuario == 1)
             {
-                if(BCrypt.Net.BCrypt.Verify(model.Pass, usuarioExistente.Pass))
-                {
-                    var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.NameIdentifier, usuarioExistente.IdOperador.ToString())
-                    };
-
-                    // Crear la identidad y el principal
-                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var principal = new ClaimsPrincipal(identity);
-                    
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-                    return RedirectToAction("Index", "Home");
-                }
+                var operador = await _repoOperador.SelectWhere(o => o.Usuario.NombreUsuario == model.Usuario)
+                    .Include(o => o.Usuario)
+                    .FirstOrDefaultAsync();
+                usuario = operador?.Usuario;
+            }
+            else
+            {
+                var socio = await _repoSocio.SelectWhere(s => s.Usuario.NombreUsuario == model.Usuario)
+                    .Include(s => s.Usuario)
+                    .FirstOrDefaultAsync();
+                usuario = socio?.Usuario;
             }
 
-            ModelState.AddModelError(string.Empty, "Nombre usuario o Pass incorrecta.");
+            if (usuario != null && BCrypt.Net.BCrypt.Verify(model.Pass, usuario.Pass))
+            {
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
+                    new Claim(ClaimTypes.Role, usuario.TipoUsuarioId.ToString(), ClaimValueTypes.String)
+                };
+
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+                
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError(string.Empty, "用户名或密码不正确。");
         }
 
         return View(model);
@@ -147,6 +183,11 @@ public class HomeController : Controller
     }
     public IActionResult Index()
     {
+        if (!User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Login", "Home");
+        }
+
         HomeIndexViewModel model = new HomeIndexViewModel();
         if(Convert.ToUInt16(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value) == 1)
         {
@@ -418,4 +459,5 @@ public class HomeController : Controller
 
         return 1.0 - ((double)d[n, m] / Math.Max(s.Length, t.Length));
     }
+
 }

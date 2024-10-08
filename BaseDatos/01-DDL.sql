@@ -1,6 +1,6 @@
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET@OLD_SQL_MODE=@@SQL_MODE, SQL_MODE = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 
 -- -----------------------------------------------------
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Editorial` (
   `idEditorial` INT NOT NULL AUTO_INCREMENT,
   `Editorial` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idEditorial`))
-ENGINE = InnoDB;
+;
 
 
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Autor` (
   `nombre` VARCHAR(45) NOT NULL,
   `apellido` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idAutor`))
-ENGINE = InnoDB;
+;
 
 
 
@@ -44,15 +44,6 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `5to_Biblioteca`.`Socio`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Socio` (
-  `idSocio` INT NOT NULL AUTO_INCREMENT,
-  `nombre` VARCHAR(45) NOT NULL,
-  `apellido` VARCHAR(45) NOT NULL,
-  `email` VARCHAR(45) NULL,
-  `telefono` INT(10) NULL,
-  `fechaNacimiento` DATE NULL,
-  PRIMARY KEY (`idSocio`))
-ENGINE = InnoDB;
 
 
 
@@ -64,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Titulo` (
   `idTitulo` INT NOT NULL AUTO_INCREMENT,
   `titulo` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`idTitulo`))
-ENGINE = InnoDB;
+;
 
 
 
@@ -94,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Libro` (
     REFERENCES `5to_Biblioteca`.`Editorial` (`idEditorial`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+;
 
 
 
@@ -117,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`AutorTitulo` (
     REFERENCES `5to_Biblioteca`.`Titulo` (`idTitulo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+;
 
 
 
@@ -137,24 +128,10 @@ CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Ejemplar` (
     REFERENCES `5to_Biblioteca`.`Libro` (`idLibro`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+;
 
 
 
-
--- -----------------------------------------------------
--- Table `5to_Biblioteca`.`Operador`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Operador` (
-  `idOperador` INT NOT NULL AUTO_INCREMENT,
-  `nombre` VARCHAR(45) NOT NULL,
-  `apellido` VARCHAR(45) NOT NULL,
-  `email` VARCHAR(100) NOT NULL,
-  `usuario` VARCHAR(45) NULL,
-  `pass` CHAR(64) NOT NULL,
-  PRIMARY KEY (`idOperador`),
-  UNIQUE INDEX `usuario_UNIQUE` (`usuario` ASC))
-ENGINE = InnoDB;
 
 
 
@@ -196,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Prestamo` (
     REFERENCES `5to_Biblioteca`.`Operador` (`idOperador`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+;
 
 
 
@@ -209,7 +186,7 @@ CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Genero` (
   `genero` VARCHAR(30) NOT NULL,
   rutaFoto VARCHAR(255),
   PRIMARY KEY (`idGenero`))
-ENGINE = InnoDB;
+;
 
 
 
@@ -232,15 +209,53 @@ CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`GeneroTitulo` (
     REFERENCES `5to_Biblioteca`.`Titulo` (`idTitulo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+;
 
 
 
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+-- -----------------------------------------------------
+-- Table `5to_Biblioteca`.`Usuario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Usuario` (
+  `idUsuario` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(45) NOT NULL,
+  `apellido` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `nombreUsuario` VARCHAR(45) NOT NULL,
+  `pass` CHAR(64) NOT NULL,
+  `tipoUsuario` ENUM('Socio', 'Operador') NOT NULL,
+  PRIMARY KEY (`idUsuario`),
+  UNIQUE INDEX `usuario_UNIQUE` (`nombreUsuario` ASC))
+;
 
+
+-- -----------------------------------------------------
+-- Table `5to_Biblioteca`.`Operador`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Operador` (
+  `idOperador` INT NOT NULL AUTO_INCREMENT,
+  `idUsuario` INT NOT NULL,
+  PRIMARY KEY (`idOperador`),
+  CONSTRAINT `fk_Operador_Usuario`
+    FOREIGN KEY (`idUsuario`)
+    REFERENCES `5to_Biblioteca`.`Usuario` (`idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Socio` (
+  `idSocio` INT NOT NULL AUTO_INCREMENT,
+  `idUsuario` INT NOT NULL,
+  `telefono` INT(10) NULL,
+  `fechaNacimiento` DATE NULL,
+  PRIMARY KEY (`idSocio`),
+  CONSTRAINT `fk_Socio_Usuario`
+    FOREIGN KEY (`idUsuario`)
+    REFERENCES `5to_Biblioteca`.`Usuario` (`idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
 
 -- -----------------------------------------------------
 -- Data for table `5to_Biblioteca`.`Editorial`

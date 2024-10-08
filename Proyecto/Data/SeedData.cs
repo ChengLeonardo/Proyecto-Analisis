@@ -6,58 +6,110 @@ namespace Proyecto.Data;
 
 public class SeedData
 {
-    public static void Initialize(IRepoOperador repoOperador, IRepoEjemplar repoEjemplar, IRepoPrestamo repoPrestamo, IRepoSocio repoSocio, IRepoLibro repoLibro, IRepoEditorial repoEditorial, IRepoAutor repoAutor, IRepoTitulo repoTitulo, IRepoGenero repoGenero)
+    public static void Initialize(IRepoOperador repoOperador, IRepoEjemplar repoEjemplar, IRepoPrestamo repoPrestamo, IRepoSocio repoSocio, IRepoLibro repoLibro, IRepoEditorial repoEditorial, IRepoAutor repoAutor, IRepoTitulo repoTitulo, IRepoGenero repoGenero, IRepoUsuario repoUsuario)
     {
         // Verificar si ya existen datos en la base de datos
         if (!repoOperador.Select().Any())
         {
-            //Seed Operador
-            var operadorAdministrador = new Operador
+            // Seed Usuario y Operador
+            var usuarioAdmin = new Usuario
             {
-                IdOperador = 0,
-                Pass = BCrypt.Net.BCrypt.HashPassword("admin"),
+                IdUsuario = 0,
                 Nombre = "Leonardo",
                 Apellido = "Cheng",
                 Email = "leonardo.chenget12de1@gmail.com",
-                Usuario  = "admin"
+                NombreUsuario = "admin",
+                Pass = BCrypt.Net.BCrypt.HashPassword("admin"),
+                TipoUsuarioId = 2
+            };
+
+            var operadorAdministrador = new Operador
+            {
+                IdOperador = 0,
+                Usuario = usuarioAdmin
+            };
+
+            var usuarioOperador1 = new Usuario
+            {
+                IdUsuario = 0,
+                Nombre = "Cheng",
+                Apellido = "Leonardo",
+                Email = "leonardo.chen1@gmail.com",
+                NombreUsuario = "operador1",
+                Pass = BCrypt.Net.BCrypt.HashPassword("operador1"),
+                TipoUsuarioId = 2
             };
 
             var operadorComun1 = new Operador
             {
                 IdOperador = 0,
-                Pass = BCrypt.Net.BCrypt.HashPassword("operador1"),
-                Nombre = "Cheng",
-                Apellido = "Leonardo",
-                Email = "leonardo.chen1@gmail.com",
-                Usuario  = "operador1"
+                Usuario = usuarioOperador1
+            };
+
+            var usuarioOperador2 = new Usuario
+            {
+                IdUsuario = 0,
+                Nombre = "Maria",
+                Apellido = "Gomez",
+                Email = "maria.gomez@gmail.com",
+                NombreUsuario = "operador2",
+                Pass = BCrypt.Net.BCrypt.HashPassword("operador2"),
+                TipoUsuarioId = 2
             };
 
             var operadorComun2 = new Operador
             {
                 IdOperador = 0,
-                Pass = BCrypt.Net.BCrypt.HashPassword("operador2"),
-                Nombre = "Maria",
-                Apellido = "Gomez",
-                Email = "maria.gomez@gmail.com",
-                Usuario = "operador2"
+                Usuario = usuarioOperador2
             };
-
-            var operadorComun3 = new Operador
-            {
-                IdOperador = 0,
-                Pass = BCrypt.Net.BCrypt.HashPassword("operador3"),
-                Nombre = "Juan",
-                Apellido = "Perez",
-                Email = "juan.perez@gmail.com",
-                Usuario = "operador3"
-            };
-
 
             repoOperador.Insert(operadorAdministrador, "IdOperador");
             repoOperador.Insert(operadorComun1, "IdOperador");
             repoOperador.Insert(operadorComun2, "IdOperador");
-            repoOperador.Insert(operadorComun3, "IdOperador");
 
+            // Seed Usuario y Socio
+            var usuarioSocio1 = new Usuario
+            {
+                IdUsuario = 0,
+                Nombre = "Juan",
+                Apellido = "Pérez",
+                Email = "juan.perez@example.com",
+                NombreUsuario = "socio1",
+                Pass = BCrypt.Net.BCrypt.HashPassword("socio1"),
+                TipoUsuarioId = 1
+            };
+
+            var socio1 = new Socio
+            {
+                IdSocio = 0,
+                Usuario = usuarioSocio1,
+                Telefono = 123456789,
+                FechaNacimiento = DateTime.Now,
+                Prestamos = new List<Prestamo>()
+            };
+
+            var usuarioSocio2 = new Usuario
+            {
+                IdUsuario = 0,
+                Nombre = "María",
+                Apellido = "Gómez",
+                Email = "maria.gomez@example.com",
+                NombreUsuario = "socio2",
+                Pass = BCrypt.Net.BCrypt.HashPassword("socio2"),
+                TipoUsuarioId = 1
+            };
+
+            var socio2 = new Socio
+            {
+                IdSocio = 0,
+                Usuario = usuarioSocio2,
+                Telefono = 987654321,
+                FechaNacimiento = DateTime.Now,
+                Prestamos = new List<Prestamo>()
+            };
+
+            repoSocio.Insert(socio1, "IdSocio");
+            repoSocio.Insert(socio2, "IdSocio");
 
             
             // Seed Autor
@@ -174,45 +226,6 @@ public class SeedData
 
             repoLibro.Insert(libro1, "IdLibro");
             repoLibro.Insert(libro2, "IdLibro");
-            
-
-            //Seed Socio
-            Socio socio1 = new Socio
-            {
-                Nombre = "Juan",
-                Apellido = "Pérez",
-                Email = "juan.perez@example.com",
-                Telefono = 123456789,
-                FechaNacimiento = DateTime.Now,
-                IdSocio = 0,
-                Prestamos = new List<Prestamo>()
-            };
-
-            Socio socio2 = new Socio
-            {
-                Nombre = "María",
-                Apellido = "Gómez",
-                Email = "maria.gomez@example.com",
-                Telefono = 987654321,
-                FechaNacimiento = DateTime.Now,
-                IdSocio = 0,
-                Prestamos = new List<Prestamo>()
-            };
-
-            Socio socio3 = new Socio
-            {
-                Nombre = "Carlos",
-                Apellido = "López",
-                Email = "carlos.lopez@example.com",
-                Telefono = 456789123,
-                FechaNacimiento = DateTime.Now,
-                IdSocio = 0,
-                Prestamos = new List<Prestamo>()
-            };
-
-            repoSocio.Insert(socio1, "IdSocio");
-            repoSocio.Insert(socio2, "IdSocio");
-            repoSocio.Insert(socio3, "IdSocio");
 
             // Seed Ejemplar
             Ejemplar ejemplar1 = new Ejemplar

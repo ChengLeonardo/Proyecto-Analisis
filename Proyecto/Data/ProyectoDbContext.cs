@@ -14,12 +14,32 @@ public class ProyectoDbContext : DbContext
     public DbSet<Operador> Operador { get; set; }
     public DbSet<Prestamo> Prestamo { get; set; }
     public DbSet<Genero> Genero { get; set; }
+    public DbSet<Usuario> Usuario { get; set; }
 
     public ProyectoDbContext(DbContextOptions<ProyectoDbContext> options) : base(options)
     {
     }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Usuario>()
+            .HasKey(u => u.IdUsuario);
+
+        modelBuilder.Entity<Usuario>()
+            .HasOne(u => u.Operador)
+            .WithOne(o => o.Usuario)
+            .HasForeignKey<Operador>(o => o.IdUsuario);
+
+        modelBuilder.Entity<Usuario>()
+            .HasOne(u => u.Socio)
+            .WithOne(s => s.Usuario)
+            .HasForeignKey<Socio>(s => s.IdUsuario);
+
+        modelBuilder.Entity<Usuario>()
+            .Property(u => u.TipoUsuarioId)
+            .HasColumnName("TipoUsuario");
+
         // Configuración para Editorial
         modelBuilder.Entity<Editorial>()
             .HasKey(e => e.IdEditorial);

@@ -1,13 +1,15 @@
 namespace Proyecto.Models;
 
+using System.ComponentModel.DataAnnotations;
+
 public class Socio
 {
+    [Key]
     public int IdSocio { get; set; }
-    public string Nombre { get; set; }
-    public string Apellido { get; set; }
-    public string Email { get; set; }
+    public int IdUsuario { get; set; }
     public int? Telefono { get; set; }
     public DateTime? FechaNacimiento { get; set; }
 
-    public ICollection<Prestamo> Prestamos { get; set; } // Relación 1:N con Prestamo
+    public Usuario Usuario { get; set; }
+    public ICollection<Prestamo> Prestamos { get; set; }
 }

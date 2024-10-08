@@ -1,7 +1,6 @@
-@model Proyecto.Models.Operador
+@model Proyecto.Models.RegisterViewModel
 
-<form asp-action="Registrar" asp-controller="Register" method="post">
-    <input asp-for="IdOperador" value="0" type="hidden">
+<form asp-action="Register" asp-controller="Home" method="post">
     <div class="w-4/5 relative">
         <label for="NombreUsuario">Nombre de Usuario</label>
         <input asp-for="Usuario" id="NombreUsuario" class="pl-12 text-black w-full h-12 rounded-full bg-white outline-none" type="text" required>
@@ -27,6 +26,32 @@
         <input asp-for="Nombre" id="Nombre" class="pl-12 text-black w-full h-12 rounded-full bg-white outline-none" type="text" required>
         <span asp-validation-for="Nombre" class="text-danger"></span>
     </div>
-    <button type="submit">Continuar</button>
-    <a asp-action="Login" asp-controller="Home">Login</a>
+    <div class="w-4/5 relative">
+        <label for="TipoUsuario">Tipo de Usuario</label>
+        <select asp-for="TipoUsuario">
+            <option value="1">Socio</option>
+            <option value="2">Operador</option>
+        </select>
+        <span asp-validation-for="TipoUsuario" class="text-danger"></span>
+    </div>
+    <div id="codigoOperadorDiv" class="w-4/5 relative" style="display: none;">
+        <label for="CodigoOperador">Código del Operador</label>
+        <input asp-for="CodigoOperador" id="CodigoOperador" class="pl-12 text-black w-full h-12 rounded-full bg-white outline-none" type="text">
+        <span asp-validation-for="CodigoOperador" class="text-danger"></span>
+    </div>
+    <button type="submit" class="w-4/5 h-12 rounded-full bg-blue-500 text-white font-bold">Registrar</button>
+    <a asp-action="Login" asp-controller="Home" class="w-4/5 h-12 rounded-full bg-gray-300 text-black font-bold flex items-center justify-center mt-4">Iniciar Sesión</a>
 </form>
+
+@section Scripts {
+    <script>
+        document.getElementById('TipoUsuario').addEventListener('change', function() {
+            var codigoOperadorDiv = document.getElementById('codigoOperadorDiv');
+            if (this.value === '@TipoUsuario.Operador') {
+                codigoOperadorDiv.style.display = 'block';
+            } else {
+                codigoOperadorDiv.style.display = 'none';
+            }
+        });
+    </script>
+}
