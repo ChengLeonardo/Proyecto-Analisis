@@ -24,5 +24,11 @@ namespace Proyecto.Models
         [Range(0, 5, ErrorMessage = "La calificación debe estar entre 0 y 5.")]
         public double Calificacion { get; set; }
         public IFormFile? Foto { get; set; }
+
+        [Required(ErrorMessage = "Debe seleccionar al menos un género")]
+        public List<int> GenerosSeleccionados { get; set; }
+
+        public List<Editorial> Editoriales { get; set; }
+        public List<Genero> Generos { get; set; }
     }
 }

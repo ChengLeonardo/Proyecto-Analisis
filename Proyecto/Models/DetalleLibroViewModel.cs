@@ -18,7 +18,5 @@ namespace Proyecto.Models
         public string ApellidoAutor { get; set; }
         public string Genero { get; set; }
         public int Stock { get; set; }
-        public decimal Precio { get; set; }
-        public string Descripcion { get; set; }
     }
 }

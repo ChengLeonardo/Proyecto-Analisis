@@ -1,0 +1,71 @@
+@model Proyecto.Models.AgregarLibroViewModel
+
+<h2>Agregar Nuevo Libro</h2>
+
+<form asp-action="AgregarLibro" enctype="multipart/form-data" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    
+    <div>
+        <label asp-for="Titulo">Nombre Título</label>
+        <input asp-for="Titulo" />
+        <span asp-validation-for="Titulo" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="ISBN">ISBN</label>
+        <input asp-for="ISBN" />
+        <span asp-validation-for="ISBN" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="IdEditorial">Nombre Editorial</label>
+        <select asp-for="IdEditorial" asp-items="@(new SelectList(Model.Editoriales, "IdEditorial", "editorial"))">
+            <option value="">Seleccione una editorial</option>
+        </select>
+        <span asp-validation-for="IdEditorial" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="IdGenero">Género</label>
+        <select asp-for="IdGenero" asp-items="@(new SelectList(Model.Generos, "IdGenero", "genero"))">
+            <option value="">Seleccione un género</option>
+        </select>
+        <span asp-validation-for="IdGenero" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="NombreAutor">Nombre del Autor</label>
+        <input asp-for="NombreAutor" />
+        <span asp-validation-for="NombreAutor" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="ApellidoAutor">Apellido del Autor</label>
+        <input asp-for="ApellidoAutor" />
+        <span asp-validation-for="ApellidoAutor" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Calificacion" class="control-label"></label>
+        <input asp-for="Calificacion" class="form-control" />
+        <span asp-validation-for="Calificacion" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Foto" class="control-label"></label>
+        <input asp-for="Foto" type="file" class="form-control" />
+        <span asp-validation-for="Foto" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Crear" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Volver a la lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

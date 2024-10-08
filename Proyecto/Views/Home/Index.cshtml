@@ -34,7 +34,7 @@
                             <td><img src="@("/images/" + (Model.Generos[i].RutaFoto ?? "DefaultGenero.png"))" asp-append-version /></td>
                         </td>
                         <td>
-                            <a asp-controller="Home" asp-action="LibrosGeneros" asp-route-id="@Model.Generos[i].IdGenero" class="btn btn-primary">Detalle</a>
+                            <a asp-controller="Home" asp-action="DetalleGenero" asp-route-id="@Model.Generos[i].IdGenero" class="btn btn-primary">Detalle</a>
                             @if (Model.Administrador) // Verifica si es administrador
                             {
                                 <a asp-controller="Home" asp-action="ModificarGenero" asp-route-id="@Model.Generos[i].IdGenero" class="btn btn-primary">Modificar</a>
@@ -158,3 +158,11 @@
         <button type="submit">Logout</button>
     </form>
 </div>
+
+<!-- Agregar este código justo después de la etiqueta <body> o donde desees que aparezca el botón -->
+@if (Model.EsOperador)
+{
+    <div class="text-center my-4">
+        <a asp-controller="Home" asp-action="AgregarLibro" class="btn btn-primary">Agregar Libro</a>
+    </div>
+}
