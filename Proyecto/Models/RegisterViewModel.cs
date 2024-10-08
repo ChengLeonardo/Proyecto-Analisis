@@ -12,7 +12,7 @@ namespace Proyecto.Models
         public string Email { get; set; }
         public string Usuario { get; set; }
         public string Pass { get; set; }
-        public int TipoUsuario { get; set; }
+        public TipoUsuario TipoUsuario { get; set; }
         public string? CodigoOperador { get; set; }
     }
 }

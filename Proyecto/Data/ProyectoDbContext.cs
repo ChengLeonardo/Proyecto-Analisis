@@ -37,7 +37,7 @@ public class ProyectoDbContext : DbContext
             .HasForeignKey<Socio>(s => s.IdUsuario);
 
         modelBuilder.Entity<Usuario>()
-            .Property(u => u.TipoUsuarioId)
+            .Property(u => u.TipoUsuario)
             .HasColumnName("TipoUsuario");
 
         // Configuración para Editorial

@@ -20,7 +20,7 @@ public class SeedData
                 Email = "leonardo.chenget12de1@gmail.com",
                 NombreUsuario = "admin",
                 Pass = BCrypt.Net.BCrypt.HashPassword("admin"),
-                TipoUsuarioId = 2
+                TipoUsuario = TipoUsuario.Operador
             };
 
             var operadorAdministrador = new Operador
@@ -37,7 +37,7 @@ public class SeedData
                 Email = "leonardo.chen1@gmail.com",
                 NombreUsuario = "operador1",
                 Pass = BCrypt.Net.BCrypt.HashPassword("operador1"),
-                TipoUsuarioId = 2
+                TipoUsuario = TipoUsuario.Operador
             };
 
             var operadorComun1 = new Operador
@@ -54,7 +54,7 @@ public class SeedData
                 Email = "maria.gomez@gmail.com",
                 NombreUsuario = "operador2",
                 Pass = BCrypt.Net.BCrypt.HashPassword("operador2"),
-                TipoUsuarioId = 2
+                TipoUsuario = TipoUsuario.Operador
             };
 
             var operadorComun2 = new Operador
@@ -76,7 +76,7 @@ public class SeedData
                 Email = "juan.perez@example.com",
                 NombreUsuario = "socio1",
                 Pass = BCrypt.Net.BCrypt.HashPassword("socio1"),
-                TipoUsuarioId = 1
+                TipoUsuario = TipoUsuario.Socio
             };
 
             var socio1 = new Socio
@@ -96,7 +96,7 @@ public class SeedData
                 Email = "maria.gomez@example.com",
                 NombreUsuario = "socio2",
                 Pass = BCrypt.Net.BCrypt.HashPassword("socio2"),
-                TipoUsuarioId = 1
+                TipoUsuario = TipoUsuario.Socio
             };
 
             var socio2 = new Socio

@@ -74,9 +74,7 @@ public class HomeController : Controller
     {
         if (ModelState.IsValid)
         {
-            var usuarioExistente = await _repoOperador.SelectWhere(o => o.Usuario.NombreUsuario == model.Usuario)
-                .Include(o => o.Usuario)
-                .Select(u => new { u.IdUsuario, u.Usuario.NombreUsuario, u.Usuario.TipoUsuarioId })
+            var usuarioExistente = await _repoUsuario.SelectWhere(u => u.NombreUsuario == model.Usuario)
                 .FirstOrDefaultAsync();
 
             if (usuarioExistente != null)
@@ -85,7 +83,7 @@ public class HomeController : Controller
                 return View(model);
             }
 
-            if (model.TipoUsuario == 1 && model.CodigoOperador != "CodigoSecreto123")
+            if (model.TipoUsuario == TipoUsuario.Operador && model.CodigoOperador != "CodigoSecreto123")
             {
                 ModelState.AddModelError("CodigoOperador", "Código de registro de operador inválido.");
                 return View(model);
@@ -98,10 +96,10 @@ public class HomeController : Controller
                 Email = model.Email,
                 NombreUsuario = model.Usuario,
                 Pass = BCrypt.Net.BCrypt.HashPassword(model.Pass),
-                TipoUsuarioId = model.TipoUsuario
+                TipoUsuario = model.TipoUsuario
             };
 
-            if (model.TipoUsuario == 1)
+            if (model.TipoUsuario == TipoUsuario.Operador)
             {
                 var operador = new Operador { Usuario = nuevoUsuario };
                 _repoOperador.Insert(operador, "IdOperador");
@@ -137,28 +135,15 @@ public class HomeController : Controller
     {
         if (ModelState.IsValid)
         {
-            Usuario usuario = null;
-            if (model.TipoUsuario == 1)
-            {
-                var operador = await _repoOperador.SelectWhere(o => o.Usuario.NombreUsuario == model.Usuario)
-                    .Include(o => o.Usuario)
-                    .FirstOrDefaultAsync();
-                usuario = operador?.Usuario;
-            }
-            else
-            {
-                var socio = await _repoSocio.SelectWhere(s => s.Usuario.NombreUsuario == model.Usuario)
-                    .Include(s => s.Usuario)
-                    .FirstOrDefaultAsync();
-                usuario = socio?.Usuario;
-            }
+            var usuario = _repoUsuario.SelectWhere(usuario => usuario.NombreUsuario == model.Usuario).FirstOrDefault();
+
 
             if (usuario != null && BCrypt.Net.BCrypt.Verify(model.Pass, usuario.Pass))
             {
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
-                    new Claim(ClaimTypes.Role, usuario.TipoUsuarioId.ToString(), ClaimValueTypes.String)
+                    new Claim(ClaimTypes.Role, usuario.TipoUsuario.ToString(), ClaimValueTypes.String)
                 };
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -169,7 +154,7 @@ public class HomeController : Controller
                 return RedirectToAction("Index", "Home");
             }
 
-            ModelState.AddModelError(string.Empty, "用户名或密码不正确。");
+            ModelState.AddModelError(string.Empty, "Nombre de usuario o contraseña incorrectos.");
         }
 
         return View(model);
@@ -189,7 +174,7 @@ public class HomeController : Controller
         }
 
         HomeIndexViewModel model = new HomeIndexViewModel();
-        if(Convert.ToUInt16(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value) == 1)
+        if(HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Operador")
         {
             model.Administrador = true;
         }

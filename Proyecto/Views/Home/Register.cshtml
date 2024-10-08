@@ -29,8 +29,8 @@
     <div class="w-4/5 relative">
         <label for="TipoUsuario">Tipo de Usuario</label>
         <select asp-for="TipoUsuario">
-            <option value="1">Socio</option>
-            <option value="2">Operador</option>
+            <option value=@TipoUsuario.Socio>Socio</option>
+            <option value=@TipoUsuario.Operador>Operador</option>
         </select>
         <span asp-validation-for="TipoUsuario" class="text-danger"></span>
     </div>
@@ -45,13 +45,20 @@
 
 @section Scripts {
     <script>
-        document.getElementById('TipoUsuario').addEventListener('change', function() {
+        function verificarTipoUsuario() {
+            var tipoUsuario = document.getElementById('TipoUsuario');
             var codigoOperadorDiv = document.getElementById('codigoOperadorDiv');
-            if (this.value === '@TipoUsuario.Operador') {
+            if (tipoUsuario.value === '@TipoUsuario.Operador') {
                 codigoOperadorDiv.style.display = 'block';
             } else {
                 codigoOperadorDiv.style.display = 'none';
             }
-        });
+        }
+
+        // Verificar al cargar la página
+        document.addEventListener('DOMContentLoaded', verificarTipoUsuario);
+
+        // Verificar cuando cambia el valor del select
+        document.getElementById('TipoUsuario').addEventListener('change', verificarTipoUsuario);
     </script>
 }

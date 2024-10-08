@@ -16,13 +16,7 @@ namespace Proyecto.Models
         public string Email { get; set; }
         public string NombreUsuario { get; set; }
         public string Pass { get; set; }
-        public int TipoUsuarioId { get; set; }
-        [NotMapped]
-        public TipoUsuario TipoUsuario 
-        {
-            get => (TipoUsuario)TipoUsuarioId;
-            set => TipoUsuarioId = (int)value;
-        }
+        public TipoUsuario TipoUsuario { get; set; }
         public Socio? Socio { get; set; }
         public Operador? Operador { get; set; }
     }

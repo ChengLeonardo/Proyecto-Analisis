@@ -224,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `5to_Biblioteca`.`Usuario` (
   `email` VARCHAR(100) NOT NULL,
   `nombreUsuario` VARCHAR(45) NOT NULL,
   `pass` CHAR(64) NOT NULL,
-  `tipoUsuario` ENUM('Socio', 'Operador') NOT NULL,
+  `tipoUsuario` int not null DEFAULT 1,
   PRIMARY KEY (`idUsuario`),
   UNIQUE INDEX `usuario_UNIQUE` (`nombreUsuario` ASC))
 ;
