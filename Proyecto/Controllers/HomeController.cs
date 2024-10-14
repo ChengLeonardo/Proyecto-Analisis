@@ -28,7 +28,8 @@ public class HomeController : Controller
     private readonly IRepoTitulo _repoTitulo;
     private readonly IRepoSocio _repoSocio;
     private readonly IRepoUsuario _repoUsuario;
-    public HomeController(IRepoOperador repoOperador, IRepoSocio repoSocio, IRepoGenero repoGenero, IRepoEjemplar repoEjemplar, IRepoLibro repoLibro, IRepoPrestamo repoPrestamo, IWebHostEnvironment environment, IRepoEditorial repoEditorial, IRepoTitulo repoTitulo, IRepoUsuario repoUsuario)
+    private readonly IRepoAutor _repoAutor;
+    public HomeController(IRepoOperador repoOperador, IRepoSocio repoSocio, IRepoGenero repoGenero, IRepoEjemplar repoEjemplar, IRepoLibro repoLibro, IRepoPrestamo repoPrestamo, IWebHostEnvironment environment, IRepoEditorial repoEditorial, IRepoTitulo repoTitulo, IRepoUsuario repoUsuario, IRepoAutor repoAutor)
     {
         _repoOperador = repoOperador;
         _repoLibro = repoLibro;
@@ -40,6 +41,7 @@ public class HomeController : Controller
         _repoTitulo = repoTitulo;
         _repoSocio = repoSocio;
         _repoUsuario = repoUsuario;
+        _repoAutor = repoAutor;
     }
 
     [HttpGet]
@@ -250,37 +252,19 @@ public class HomeController : Controller
             // ... otros campos ...
             GenerosSeleccionados = libro.Titulo.Generos.Select(g => g.IdGenero).ToList(),
             Editoriales = _repoEditorial.Select().ToList(),
-            Generos = _repoGenero.Select().ToList()
+            Generos = _repoGenero.Select().ToList(),
+            IdLibro = libro.IdLibro,
+            Titulo = libro.Titulo.titulo,
+            ISBN = libro.ISBN,
+            RutaFoto = libro.RutaFoto,
+            FechaAgregada = libro.FechaAgregada,
+            Calificacion = libro.Calificacion,
+            IdEditorial = libro.Editorial.IdEditorial,
         };
 
         return View(model);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> ModificarLibro(ModificarLibroViewModel model)
-    {
-        if (ModelState.IsValid)
-        {
-            var libro = _repoLibro.SelectWhere(l => l.IdLibro == model.IdLibro)
-                .Include(l => l.Titulo)
-                .ThenInclude(t => t.Generos)
-                .FirstOrDefault();
-
-            if (libro == null)
-            {
-                return NotFound();
-            }
-
-            // ... actualizar otros campos ...
-
-            var generos = await _repoGenero.SelectWhere(g => model.GenerosSeleccionados.Contains(g.IdGenero)).ToListAsync();
-            libro.Titulo.Generos.Clear();
-            libro.Titulo.Generos.AddRange(generos);
-
-            _repoLibro.Update(libro);
-
-            return RedirectToAction("DetalleLibro", new { id = libro.IdLibro });
-        }
     [HttpPost]
     public async Task<IActionResult> ModificarLibro(ModificarLibroViewModel model)
     {
@@ -293,44 +277,41 @@ public class HomeController : Controller
             }
             string uniqueFileName = null;
 
-            var Editorial = _repoEditorial.SelectWhere(x => x.editorial == model.Editorial).FirstOrDefault();
-            if (Editorial == null)
+            var editorial = _repoEditorial.SelectWhere(x => x.IdEditorial == model.IdEditorial).FirstOrDefault();
+            if (editorial == null)
             {
-                ModelState.AddModelError("Editorial", "Editorial no existe");
+                ModelState.AddModelError("IdEditorial", "Editorial no existe");
                 return View(model);
             }
 
             // Obtener el libro actual de la base de datos
             var libro = _repoLibro.SelectWhere(l => l.IdLibro == model.IdLibro)
-                     .Include(l => l.Titulo)  // Incluye la relación Titulo
+                     .Include(l => l.Titulo)
+                        .ThenInclude(t => t.Generos)
+                     .Include(l => l.Titulo)
+                        .ThenInclude(t => t.Autores)
                      .FirstOrDefault();
 
-            var Titulo = _repoTitulo.SelectWhere(x => x.titulo == model.Titulo).Include(x => x.Generos).Include(x => x.Autores).Include(x => x.Libros).FirstOrDefault();
-            if (Titulo == null)
+            // Actualizar el título si ha cambiado
+            if (libro.Titulo.titulo != model.Titulo)
             {
-                var autor = _repoLibro.Select()
-                    .Where(libro => libro.IdLibro == model.IdLibro)
-                    .SelectMany(libro => libro.Titulo.Autores)
-                    .FirstOrDefault();
-
-                List<Genero> generos = _repoLibro.Select()
-                    .Where(libro => libro.IdLibro == model.IdLibro)
-                    .SelectMany(libro => libro.Titulo.Generos)
-                    .ToList();
-
-                Titulo titulo = new Titulo
+                var tituloExistente = _repoTitulo.SelectWhere(x => x.titulo == model.Titulo).FirstOrDefault();
+                if (tituloExistente == null)
                 {
-                    Autores = new List<Autor> { autor },
-                    Generos = generos,
-                    IdTitulo = 0,
-                    Libros = new List<Libro>(),
-                    titulo = model.Titulo
-                };
-                libro.Titulo = titulo;
+                    libro.Titulo.titulo = model.Titulo;
+                }
+                else
+                {
+                    libro.Titulo = tituloExistente;
+                }
             }
-            else
+
+            // Actualizar géneros
+            var generosSeleccionados = await _repoGenero.SelectWhere(g => model.GenerosSeleccionados.Contains(g.IdGenero)).ToListAsync();
+            libro.Titulo.Generos.Clear();
+            foreach (var genero in generosSeleccionados)
             {
-                libro.Titulo = Titulo;
+                libro.Titulo.Generos.Add(genero);
             }
 
             // Si hay una nueva foto, manejar la subida
@@ -363,25 +344,16 @@ public class HomeController : Controller
             libro.ISBN = model.ISBN;
             libro.FechaAgregada = model.FechaAgregada;
             libro.Calificacion = model.Calificacion;
-            libro.Editorial = Editorial;
+            libro.Editorial = editorial;
 
             _repoLibro.Update(libro);
 
-            return RedirectToAction("DetalleLibro", "Home", new { id = libro.IdLibro });
+            return RedirectToAction("DetalleLibro", new { id = libro.IdLibro });
         }
-        // if (!ModelState.IsValid)
-        // {
-        //     foreach (var state in ModelState)
-        //     {
-        //         foreach (var error in state.Value.Errors)
-        //         {
-        //             Console.WriteLine($"Error en el campo {state.Key}: {error.ErrorMessage}");
-        //         }
-        //     }
-        //     return View(model);
-        // }
 
-
+        // Si el modelo no es válido, volver a cargar las listas de editoriales y géneros
+        model.Editoriales = _repoEditorial.Select().ToList();
+        model.Generos = _repoGenero.Select().ToList();
         return View(model);
     }
 
@@ -431,7 +403,7 @@ public class HomeController : Controller
             Editorial = libro.Editorial.editorial,
             NombreAutor = libro.Titulo.Autores.FirstOrDefault()?.Nombre ?? "",
             ApellidoAutor = libro.Titulo.Autores.FirstOrDefault()?.Apellido ?? "",
-            Genero = libro.Titulo.Generos.FirstOrDefault()?.genero ?? "",
+            Genero = libro.Titulo.Generos.Select(g => g.genero).ToList(),
             Stock = ejemplares.Count,
         };
 
@@ -523,11 +495,13 @@ public class HomeController : Controller
             return Forbid();
         }
 
+        var generos = _repoGenero.Select().ToList();
+
         var viewModel = new AgregarLibroViewModel
         {
             Editoriales = _repoEditorial.Select().ToList(),
-            Generos = _repoGenero.Select().ToList(),
-            GenerosSeleccionados = new List<int>()
+            Generos = generos,
+            GenerosSeleccionados = generos.Select(g => g.IdGenero).ToList(),  
         };
 
         return View(viewModel);
@@ -554,17 +528,35 @@ public class HomeController : Controller
                 return View(model);
             }
 
-            var titulo = new Titulo
+            var tituloExistente = _repoTitulo.SelectWhere(t => t.titulo == model.Titulo).FirstOrDefault();
+            Titulo titulo;
+            if(tituloExistente != null)
             {
+                titulo = tituloExistente;
+            }
+            else
+            {
+                titulo = new Titulo
+                {
                 titulo = model.Titulo,
                 Generos = generos
-            };
+                };
+            }
 
-            var autor = new Autor
+            var autorExistente = _repoAutor.SelectWhere(a => a.Nombre == model.NombreAutor && a.Apellido == model.ApellidoAutor).FirstOrDefault();
+            Autor autor;
+            if(autorExistente != null)
             {
+                autor = autorExistente;
+            }
+            else
+            {
+                autor = new Autor
+                {
                 Nombre = model.NombreAutor,
                 Apellido = model.ApellidoAutor
-            };
+                };
+            }
 
             titulo.Autores = new List<Autor> { autor };
 
@@ -601,6 +593,93 @@ public class HomeController : Controller
         return View(model);
     }
 
+    public IActionResult AgregarGenero()
+    {
+        return View();
+    }
 
+    [HttpPost]
+    public async Task<IActionResult> AgregarGenero(AgregarGeneroViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            string uniqueFileName = null;
+            if (model.Foto != null)
+            {
+                string uploadsFolder = Path.Combine(_environment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Foto.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.Foto.CopyToAsync(fileStream);
+                }
+            }
+
+            var genero = new Genero
+            {
+                genero = model.NombreGenero,
+                RutaFoto = uniqueFileName
+            };
+
+            _repoGenero.Insert(genero, "IdGenero");
+            return RedirectToAction("Index", "Home");
+        }
+
+        return View(model);
+    }
+
+    [HttpGet]
+    public IActionResult ModificarGenero(int id)
+    {
+        var genero = _repoGenero.SelectWhere(g => g.IdGenero == id).FirstOrDefault();
+        if (genero == null)
+        {
+            return NotFound();
+        }
+
+        var viewModel = new ModificarGeneroViewModel
+        {
+            IdGenero = genero.IdGenero,
+            NombreGenero = genero.genero,
+            RutaFoto = genero.RutaFoto
+        };
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ModificarGenero(ModificarGeneroViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            string uniqueFileName = null;
+            if (model.Foto != null)
+            {
+                string uploadsFolder = Path.Combine(_environment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Foto.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.Foto.CopyToAsync(fileStream);
+                }
+
+                model.RutaFoto = uniqueFileName;
+            }
+            var genero = _repoGenero.SelectWhere(g => g.IdGenero == model.IdGenero).FirstOrDefault();
+            if (genero == null)
+            {
+                return NotFound();
+            }
+
+            genero.genero = model.NombreGenero;
+            genero.RutaFoto = model.RutaFoto;
+
+            _repoGenero.Update(genero);
+            return RedirectToAction("Index", "Home");
+        }
+
+        return View(model);
+    }
 }

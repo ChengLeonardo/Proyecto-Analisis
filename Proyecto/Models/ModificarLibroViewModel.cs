@@ -7,9 +7,6 @@ namespace Proyecto.Models
     {
         public int IdLibro { get; set; }
 
-        [Required(ErrorMessage = "El campo Editorial es obligatorio.")]
-        public string Editorial { get; set; }
-
         [Required(ErrorMessage = "El campo Título es obligatorio.")]
         public string Titulo { get; set; }
 
@@ -25,10 +22,13 @@ namespace Proyecto.Models
         public double Calificacion { get; set; }
         public IFormFile? Foto { get; set; }
 
+        [Required(ErrorMessage = "Debe seleccionar una editorial.")]
+        public int IdEditorial { get; set; }
+
         [Required(ErrorMessage = "Debe seleccionar al menos un género")]
         public List<int> GenerosSeleccionados { get; set; }
 
-        public List<Editorial> Editoriales { get; set; }
-        public List<Genero> Generos { get; set; }
+        public List<Editorial>? Editoriales { get; set; }
+        public List<Genero>? Generos { get; set; }
     }
 }

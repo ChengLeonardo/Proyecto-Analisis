@@ -16,7 +16,7 @@ namespace Proyecto.Models
         public string Editorial { get; set; }
         public string NombreAutor { get; set; }
         public string ApellidoAutor { get; set; }
-        public string Genero { get; set; }
+        public List<string> Genero { get; set; }
         public int Stock { get; set; }
     }
 }

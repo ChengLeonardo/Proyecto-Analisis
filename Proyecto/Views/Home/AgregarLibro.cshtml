@@ -26,11 +26,18 @@
     </div>
 
     <div>
-        <label asp-for="IdGenero">Género</label>
-        <select asp-for="IdGenero" asp-items="@(new SelectList(Model.Generos, "IdGenero", "genero"))">
-            <option value="">Seleccione un género</option>
-        </select>
-        <span asp-validation-for="IdGenero" class="text-danger"></span>
+        <label asp-for="GenerosSeleccionados">Géneros</label>
+        @foreach (var genero in Model.Generos)
+        {
+            <div>
+                <input type="checkbox" 
+                       name="GenerosSeleccionados" 
+                       value="@genero.IdGenero" 
+                       @(Model.GenerosSeleccionados.Contains(genero.IdGenero) ? "checked" : "") />
+                <label>@genero.genero</label>
+            </div>
+        }
+        <span asp-validation-for="GenerosSeleccionados" class="text-danger"></span>
     </div>
 
     <div>

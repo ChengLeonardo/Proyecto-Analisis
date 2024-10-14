@@ -22,9 +22,6 @@ namespace Proyecto.Models
         [Required(ErrorMessage = "La editorial es obligatoria")]
         public int IdEditorial { get; set; }
 
-        [Required(ErrorMessage = "El género es obligatorio")]
-        public int IdGenero { get; set; }
-
         [Required(ErrorMessage = "El nombre del autor es obligatorio")]
         public string NombreAutor { get; set; }
 
@@ -36,7 +33,7 @@ namespace Proyecto.Models
         [Required(ErrorMessage = "Debe seleccionar al menos un género")]
         public List<int> GenerosSeleccionados { get; set; }
 
-        public List<Editorial> Editoriales { get; set; }
-        public List<Genero> Generos { get; set; }
+        public List<Editorial>? Editoriales { get; set; }
+        public List<Genero>? Generos { get; set; }
     }
 }

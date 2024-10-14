@@ -8,7 +8,7 @@ public class Libro
     public int IdTitulo { get; set; }
     public string ISBN { get; set; }
     public string? RutaFoto { get; set; }
-    public DateTime FechaAgregada { get; set; }
+    public DateTime FechaAgregada { get; set; } = DateTime.Now;
     public double Calificacion { get; set; }
     public Editorial Editorial { get; set; } // Relación N:1 con Editorial
     public Titulo Titulo { get; set; } // Relación N:1 con Titulo

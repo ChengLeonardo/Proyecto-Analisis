@@ -7,7 +7,7 @@ using Proyecto.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
+var serverVersion = ServerVersion.AutoDetect(connectionString);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ProyectoDbContext>(dbContextOptions => dbContextOptions.UseMySql(connectionString, serverVersion));
@@ -22,6 +22,13 @@ builder.Services.AddScoped<IRepoTitulo, RepoTitulo>();
 builder.Services.AddScoped<IRepoGenero, RepoGenero>();
 builder.Services.AddScoped<IRepoUsuario, RepoUsuario>();
 
+var options = new DbContextOptionsBuilder<ProyectoDbContext>()
+    .UseMySql(connectionString, serverVersion)
+    .Options;
+
+var context = new ProyectoDbContext(options);
+
+context.Database.EnsureCreated();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(options =>
         {

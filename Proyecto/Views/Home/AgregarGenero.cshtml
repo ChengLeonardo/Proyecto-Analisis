@@ -1,24 +1,21 @@
-@model Proyecto.Models.ModificarGeneroViewModel
+@model Proyecto.AgregarGeneroViewModel
 
-<h2>Modificar Género</h2>
-@{
-    var fotoPath = "/images/" + (Model.RutaFoto ?? "DefaultGenero.jpg");
-}
+<h2>Agregar Nuevo Género</h2>
 
-<form asp-action="ModificarGenero" method="post" enctype="multipart/form-data">
-    <input type="hidden" asp-for="IdGenero" />
+<form asp-action="AgregarGenero" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label asp-for="NombreGenero">Nombre del Género</label>
         <input asp-for="NombreGenero" class="form-control" required />
         <span asp-validation-for="NombreGenero" class="text-danger"></span>
     </div>
+    
     <div class="form-group">
         <label asp-for="Foto">Imagen del Género</label>
-        <img src=@fotoPath asp-append-version/>
         <input type="file" asp-for="Foto" class="form-control-file" />
         <span asp-validation-for="Foto" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Modificar Género</button>
+    
+    <button type="submit" class="btn btn-primary">Agregar Género</button>
 </form>
 
 <div>
