@@ -1079,12 +1079,7 @@ th{
 }
 
 /* nav tabs */
-.nav-tabs .nav-link{
-  color: var(--black-color);
-}
-:focus-visible {
-  outline: none;
-}
+
 
 /* 4.1 Header
 /*----------------------------------------------*/
@@ -1098,7 +1093,7 @@ th{
   height: 50px;
 }
 .navbar-nav .nav-item a.nav-link {
-  font-size: 0.7619em;
+  font-size: 18px;
   font-weight: 600;
   letter-spacing: 0.09em;
   color: var(--black-color);
