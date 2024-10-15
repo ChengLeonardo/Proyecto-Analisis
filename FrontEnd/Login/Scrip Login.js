@@ -1,24 +1,26 @@
-function togglePasswordVisibility(inputId, iconId) {
-    const input = document.getElementById(inputId);
-    const icon = document.getElementById(iconId);
-    
-    if (input.type === "password") {
-        input.type = "text";
-        icon.classList.remove('bxs-lock-alt');
-        icon.classList.add('bxs-lock-open-alt');
-    } else {
-        input.type = "password";
-        icon.classList.remove('bxs-lock-open-alt');
-        icon.classList.add('bxs-lock-alt');
-    }
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('togglePassword').addEventListener('click', function() {
-        togglePasswordVisibility('password', 'togglePassword');
+    const togglePassword = document.getElementById('togglePassword');
+    const toggleVerifyPassword = document.getElementById('toggleVerifyPassword');
+    const password = document.getElementById('password');
+    const verifyPassword = document.getElementById('verifyPassword');
+
+    function togglePasswordVisibility(inputField, toggleIcon) {
+        if (inputField.type === 'password') {
+            inputField.type = 'text';
+            toggleIcon.classList.remove('bxs-lock-alt');
+            toggleIcon.classList.add('bx-lock-open-alt');
+        } else {
+            inputField.type = 'password';
+            toggleIcon.classList.remove('bx-lock-open-alt');
+            toggleIcon.classList.add('bxs-lock-alt');
+        }
+    }
+
+    togglePassword.addEventListener('click', function() {
+        togglePasswordVisibility(password, this);
     });
 
-    document.getElementById('toggleVerifyPassword').addEventListener('click', function() {
-        togglePasswordVisibility('verifyPassword', 'toggleVerifyPassword');
+    toggleVerifyPassword.addEventListener('click', function() {
+        togglePasswordVisibility(verifyPassword, this);
     });
 });
