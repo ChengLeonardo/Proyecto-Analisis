@@ -5,10 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Inicio de Sesión</title>
-    <link rel="stylesheet" href="Style Login.css">
+    <link rel="stylesheet" href="/FrontEnd/Login/Style Login.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
+    <video autoplay muted loop id="myVideo">
+        <source src="/FrontEnd/img/Fondos Moviles/Login.mp4" type="video/mp4">
+    </video>
     <div class="wrapper">
         <form action="">
             <h1>Login</h1>
@@ -20,20 +23,12 @@
                 <input type="password" placeholder="Password" required id="password">
                 <i class='bx bxs-lock-alt' id="togglePassword"></i>
             </div>
-            <div class="input-box">
-                <input type="password" placeholder="Verificación" required id="verifyPassword">
-                <i class='bx bxs-lock-alt' id="toggleVerifyPassword"></i>
-            </div>
-            <div class="remember-forgot">
-                <label><input type="checkbox"> Recuérdame</label>
-                <a href="#">¿Olvidaste tu contraseña?</a>
-            </div>
             <button type="submit" class="btn">Login</button>
             <div class="register-link">
                 <p>¿No tienes una cuenta? <a href="#">Regístrate</a></p>
             </div>
         </form>
     </div>
-<script src="Scrip Login.js"></script>
+<script src="/FrontEnd/Login/Scrip Login.js"></script>
 </body>
 </html>

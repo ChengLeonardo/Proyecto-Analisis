@@ -877,7 +877,7 @@ th{
   background: transparent;
 }
 .search-box svg {
-  width: 22px;
+  width: 5px;
   height: 22px;
   color: var(--primary-color);
 }
@@ -944,7 +944,6 @@ th{
   cursor: default;
   -webkit-transform: translateY(-40px);
   transform: translateY(-40px);
-  -webkit-backface-visibility: hidden;
   -webkit-transition-property: -webkit-transform;
   transition-property: transform;
   -webkit-transition-duration: 0.3s;
@@ -1160,8 +1159,10 @@ th{
 
 /*------------ Top User Icons -----------*/
 .site-header .user-items svg {
-  width: 22px;
-  height: 22px;
+
+
+  width: 5px !important;
+  height: 5px !important;
   cursor: pointer;
 }
 
