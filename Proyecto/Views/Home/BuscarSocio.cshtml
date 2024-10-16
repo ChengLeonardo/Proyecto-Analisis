@@ -1,0 +1,40 @@
+@model List<Proyecto.Models.Socio>
+
+<h2>Resultados de la búsqueda de socios</h2>
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Nombre de Usuario</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var socio in Model)
+            {
+                <tr>
+                    <td>@socio.Usuario.Nombre</td>
+                    <td>@socio.Usuario.Apellido</td>
+                    <td>@socio.Usuario.Email</td>
+                    <td>@socio.Telefono</td>
+                    <td>@socio.Usuario.NombreUsuario</td>
+                    <td>
+                        <a asp-action="Prestamos" asp-route-socioId="@socio.IdSocio" class="btn btn-primary">Ver Préstamos</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No se encontraron socios que coincidan con la búsqueda.</p>
+}
+
+<a asp-action="Index" class="btn btn-secondary">Volver al Inicio</a>

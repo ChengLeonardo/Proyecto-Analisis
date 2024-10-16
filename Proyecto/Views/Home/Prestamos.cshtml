@@ -1,0 +1,41 @@
+@model List<Proyecto.Models.Prestamo>
+
+<h2>Préstamos</h2>
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID Préstamo</th>
+                <th>Libro</th>
+                <th>Fecha de Salida</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var prestamo in Model)
+            {
+                <tr>
+                    <td>@prestamo.IdPrestamo</td>
+                    <td>@prestamo.Ejemplar.Libro.Titulo.titulo</td>
+                    <td>@prestamo.Salida</td>
+                    <td>@(prestamo.Recibido ? "Devuelto" : "Pendiente")</td>
+                    <td>
+                        @if (!prestamo.Recibido)
+                        {
+                            <a asp-action="EntregarLibro" asp-route-idPrestamo="@prestamo.IdPrestamo" class="btn btn-primary">Devolver</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No hay préstamos para mostrar.</p>
+}
+
+<a asp-action="Index" class="btn btn-secondary">Volver al Inicio</a>

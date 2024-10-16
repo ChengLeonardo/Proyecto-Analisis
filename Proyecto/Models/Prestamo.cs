@@ -6,12 +6,12 @@ public class Prestamo
     public uint IdEjemplar { get; set; }
     public int IdSocio { get; set; }
     public DateTime? Salida { get; set; }
-    public int IdOperadorEntrega { get; set; }
+    public int? IdOperadorEntrega { get; set; }
     public DateTime? Regreso { get; set; }
     public int? IdOperadorRegreso { get; set; }
-
-    public Ejemplar Ejemplar { get; set; } // Relación N:1 con Ejemplar
-    public Socio Socio { get; set; } // Relación N:1 con Socio
-    public Operador OperadorEntrega { get; set; } // Relación N:1 con Operador
-    public Operador OperadorRegreso { get; set; } // Relación N:1 con Operador
+    public bool Recibido { get; set; }
+    public Ejemplar Ejemplar { get; set; }
+    public Socio Socio { get; set; }
+    public Operador? OperadorEntrega { get; set; }
+    public Operador? OperadorRegreso { get; set; }
 }

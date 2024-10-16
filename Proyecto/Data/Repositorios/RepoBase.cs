@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Proyecto.Interfaces;
-
+using Microsoft.EntityFrameworkCore.Storage;
 namespace Proyecto.Models;
 
 public class RepoBase<T, N> : IRepoBase<T, N> where T : class
@@ -49,5 +49,9 @@ public class RepoBase<T, N> : IRepoBase<T, N> where T : class
     {
         _dbSet.Update(objeto);
         _context.SaveChanges();
+    }
+    public async Task<IDbContextTransaction> BeginTransactionAsync()
+    {
+        return await _context.Database.BeginTransactionAsync();
     }
 }

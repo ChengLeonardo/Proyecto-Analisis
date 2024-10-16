@@ -21,7 +21,7 @@ builder.Services.AddScoped<IRepoSocio, RepoSocio>();
 builder.Services.AddScoped<IRepoTitulo, RepoTitulo>();
 builder.Services.AddScoped<IRepoGenero, RepoGenero>();
 builder.Services.AddScoped<IRepoUsuario, RepoUsuario>();
-
+builder.WebHost.UseUrls("http://localhost:5171");
 var options = new DbContextOptionsBuilder<ProyectoDbContext>()
     .UseMySql(connectionString, serverVersion)
     .Options;

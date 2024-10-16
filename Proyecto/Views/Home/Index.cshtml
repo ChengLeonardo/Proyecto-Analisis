@@ -13,9 +13,28 @@
             </form>
         </div>
     </div>
+    @if(Model.EsOperador == true)
+    {
+        <div class="row mb-4">
+            <div class="col-md-6 offset-md-3">
+                <form asp-controller="Home" asp-action="BuscarSocio" method="get" class="form-inline">
+                    <div class="input-group w-100">
+                        <input type="text" name="query" class="form-control" placeholder="Buscar socio...">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Buscar Socio</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+    else if (Model.EsOperador == false)
+    {
+        <a asp-controller="Home" asp-action="Prestamos" class="btn btn-primary">Ver Préstamos</a>
+    }
 <div class="text-center">
         <p>Categorias</p>
-        @if(Model.Administrador == true)
+        @if(Model.EsOperador == true)
         {
             <a asp-controller="Home" asp-action="AgregarGenero" class="btn btn-primary">Agregar Genero</a>
         }
@@ -23,7 +42,7 @@
             <thead>
                 <tr>
                     <th>Nombre Categoria</th>
-                    @if(Model.Administrador == true)
+                    @if(Model.EsOperador == true)
                     {
                         <th>Acciones</th>
                     } <!-- Nueva columna para acciones -->
@@ -39,7 +58,7 @@
                         </td>
                         <td>
                             <a asp-controller="Home" asp-action="DetalleGenero" asp-route-id="@Model.Generos[i].IdGenero" class="btn btn-primary">Detalle</a>
-                            @if (Model.Administrador) // Verifica si es administrador
+                            @if (Model.EsOperador) // Verifica si es administrador
                             {
                                 <a asp-controller="Home" asp-action="ModificarGenero" asp-route-id="@Model.Generos[i].IdGenero" class="btn btn-primary">Modificar</a>
                                 <a asp-controller="Home" asp-action="EliminarGenero" asp-route-id="@Model.Generos[i].IdGenero" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este género?');">Eliminar</a>
@@ -77,7 +96,7 @@
                         <td>@(Model.LibrosPopulares[i].Calificacion)</td>
                         <td>
                             <a asp-controller="Home" asp-action="DetalleLibro" asp-route-id="@Model.LibrosPopulares[i].IdLibro" class="btn btn-primary">Detalle</a>
-                            @if (Model.Administrador) // Verifica si es administrador
+                            @if (Model.EsOperador) // Verifica si es administrador
                             {
                                 <a asp-controller="Home" asp-action="ModificarLibro" asp-route-id="@Model.LibrosPopulares[i].IdLibro" class="btn btn-primary">Modificar</a>
                                 <a asp-controller="Home" asp-action="EliminarLibro" asp-route-id="@Model.LibrosPopulares[i].IdLibro" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este libro?');">Eliminar</a>
@@ -96,7 +115,7 @@
                     <th>Editorial</th>
                     <th>Imagen</th>
                     <th>Calificacion</th>
-                    @if(Model.Administrador == true)
+                    @if(Model.EsOperador == true)
                     {
                         <th>Acciones</th>
                     } <!-- Nueva columna para acciones -->
@@ -112,7 +131,7 @@
                         <td>@(Model.LibrosNuevos[i].Calificacion)</td>
                         <td>
                             <a asp-controller="Home" asp-action="DetalleLibro" asp-route-id="@Model.LibrosNuevos[i].IdLibro" class="btn btn-primary">Detalle</a>
-                            @if (Model.Administrador) // Verifica si es administrador
+                            @if (Model.EsOperador) // Verifica si es administrador
                             {
                                 <a asp-controller="Home" asp-action="ModificarLibro" asp-route-id="@Model.LibrosNuevos[i].IdLibro" class="btn btn-primary">Modificar</a>
                                 <a asp-controller="Home" asp-action="EliminarLibro" asp-route-id="@Model.LibrosNuevos[i].IdLibro" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este libro?');">Eliminar</a>
@@ -131,7 +150,7 @@
                     <th>Editorial</th>
                     <th>Imagen</th>
                     <th>Calificacion</th>
-                    @if(Model.Administrador == true)
+                    @if(Model.EsOperador == true)
                     {
                         <th>Acciones</th>
                     } <!-- Nueva columna para acciones -->
@@ -147,7 +166,7 @@
                         <td>@(Model.LibrosElegidos[i].Calificacion)</td>
                         <td>
                             <a asp-controller="Home" asp-action="DetalleLibro" asp-route-id="@Model.LibrosElegidos[i].IdLibro" class="btn btn-primary">Detalle</a>
-                            @if (Model.Administrador) // Verifica si es administrador
+                            @if (Model.EsOperador) // Verifica si es administrador
                             {
                                 <a asp-controller="Home" asp-action="ModificarLibro" asp-route-id="@Model.LibrosElegidos[i].IdLibro" class="btn btn-primary">Modificar</a>
                                 <a asp-controller="Home" asp-action="EliminarLibro" asp-route-id="@Model.LibrosElegidos[i].IdLibro" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este libro?');">Eliminar</a>
