@@ -1231,6 +1231,27 @@ th{
   max-height: 90px;
 }
 
+
+.category {
+  background-color: #6c757d; /* Color de fondo claro */
+  padding: 2px 6px; /* Espaciado alrededor del texto */
+  border-radius: 4px; /* Bordes redondeados */
+  font-weight: bold; /* Texto en negrita */
+  color: #000000; /* Color del texto */
+}
+
+@media(max-width: 1170px){
+  .posts-main-container{
+      grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media(max-width: 768px){
+  .posts-main-container{
+      grid-template-columns: 1fr;
+  }
+}
+
+
 /*------------Swiper Pagination -----------*/
 .product-store .swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
   bottom: 35px;
