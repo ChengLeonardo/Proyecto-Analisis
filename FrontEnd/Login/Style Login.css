@@ -119,6 +119,7 @@ body {
     font-size: 1em;
     font-weight: 600;
     padding: 0 35px 0 5px;
+    color: #fff;
 }
 
 /*Diseño del Icono de la Caja de Input*/
@@ -146,8 +147,9 @@ body {
 
 /*Diseño del Boton de Inicio de Sesion al pasar el cursor por encima*/
 .btn:hover{
-    background: #162938;
+    background: transparent;
     color: #fff;
+    border: 2px solid #fff;
 }
 
 .login-register{
