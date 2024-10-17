@@ -700,7 +700,7 @@ public class HomeController : Controller
                 return RedirectToAction("DetalleLibro", new { id = idLibro });
             }
             var idUsuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            Console.WriteLine(idUsuario);
+
             var socio = _repoSocio.SelectWhere(s => s.IdUsuario == idUsuario).FirstOrDefault();
             if (socio == null)
             {
@@ -725,11 +725,19 @@ public class HomeController : Controller
 
     public IActionResult Prestamos(uint? socioId)
     {
+        var model = new PrestamosViewModel();
         List<Prestamo> prestamos = new List<Prestamo>();
-        if (HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Operador")
+        if (HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Operador" || HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Administrador")
         {
             prestamos = BuscarSocioPrestamos(socioId);
-            return View(prestamos);
+            model = new PrestamosViewModel
+            {
+                Prestamos = prestamos,
+                EsSocio = false,
+                EsOperador = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Operador",
+                EsAdministrador = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Administrador"
+            };
+            return View(model);
         }
 
         var idUsuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -738,66 +746,123 @@ public class HomeController : Controller
         {
             throw new Exception("No se encontró el socio asociado a este usuario.");
         }
-        prestamos = _repoPrestamo.SelectWhere(p => p.IdSocio == socio.IdSocio).ToList();
+        prestamos = _repoPrestamo.SelectWhere(p => p.IdSocio == socio.IdSocio).Include(p => p.OperadorEntrega).Include(p => p.OperadorRegreso).ToList();
         foreach(Prestamo prestamo in prestamos)
+        {
+            Console.WriteLine(prestamo.IdPrestamo);
+            var ejemplar = _repoEjemplar.SelectWhere(e => e.IdEjemplar == prestamo.IdEjemplar).FirstOrDefault();
+            var libro = _repoLibro.SelectWhere(l => l.IdLibro == ejemplar.IdLibro).FirstOrDefault();
+            var titulo = _repoTitulo.SelectWhere(t => t.IdTitulo == libro.IdTitulo).FirstOrDefault();
+            Console.WriteLine(titulo.titulo);
+            prestamo.Ejemplar.Libro.Titulo.titulo = titulo.titulo;
+        }
+        model = new PrestamosViewModel
+        {
+            Prestamos = prestamos,
+            EsSocio = true,
+            EsOperador = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Operador",
+            EsAdministrador = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Administrador"
+        };
+        return View(model);
+    }
+
+    public async Task<IActionResult> EntregarLibro(int idPrestamo)
+    {
+        try
+        {
+            Console.WriteLine(HttpContext.User.FindFirst(ClaimTypes.Role)?.Value);
+            var prestamo = _repoPrestamo.SelectWhere(p => p.IdPrestamo == idPrestamo).Include(p => p.Socio).FirstOrDefault();
+            if (prestamo == null)
+            {
+                return NotFound();
+            }
+            var idUsuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var operador = _repoOperador.SelectWhere(o => o.IdUsuario == idUsuario).FirstOrDefault();
+            if(HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Operador")
+            {
+                prestamo.EntregadoPorOperador = true;
+            }
+            else
+            {
+                return Forbid();
+            }
+            prestamo.OperadorEntrega = operador;
+            _repoPrestamo.Update(prestamo);
+    
+            return RedirectToAction("Prestamos", "Home", new { socioId = prestamo.Socio.IdSocio });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(500, "Error al entregar el libro");
+        }
+    }
+
+    public IActionResult ConfirmarRecibo(int idPrestamo)
+    {
+        var prestamo = _repoPrestamo.SelectWhere(p => p.IdPrestamo == idPrestamo).Include(p => p.Socio).FirstOrDefault();
+        if (prestamo == null)
+        {
+            return NotFound();
+        }
+        prestamo.Recibido = true;
+        prestamo.RecibidoConfirmadoPorSocio = true;
+        prestamo.Salida = DateTime.Now;
+        _repoPrestamo.Update(prestamo);
+        return RedirectToAction("Prestamos", "Home", new { socioId = prestamo.Socio.IdSocio });
+    }
+
+    public IActionResult CancelarPrestamo(int idPrestamo)
+    {
+        var prestamo = _repoPrestamo.SelectWhere(p => p.IdPrestamo == idPrestamo).Include(p => p.Socio).FirstOrDefault();
+        if (prestamo == null)
+        {
+            return NotFound();
+        }
+        prestamo.Cancelado = true;
+        _repoPrestamo.Update(prestamo);
+        return RedirectToAction("Prestamos", "Home", new { socioId = prestamo.Socio.IdSocio });
+    }
+
+    public IActionResult DevolverLibro(int idPrestamo)
+    {
+        var prestamo = _repoPrestamo.SelectWhere(p => p.IdPrestamo == idPrestamo).Include(p => p.Socio).FirstOrDefault();
+        if (prestamo == null)
+        {
+            return NotFound();
+        }
+        prestamo.DevueltoPorSocio = true;
+        _repoPrestamo.Update(prestamo);
+        return RedirectToAction("Prestamos", "Home", new { socioId = prestamo.Socio.IdSocio });
+    }
+
+    public IActionResult ConfirmarDevolucion(int idPrestamo)
+    {
+        var prestamo = _repoPrestamo.SelectWhere(p => p.IdPrestamo == idPrestamo).Include(p => p.Socio).FirstOrDefault();
+        if (prestamo == null)
+        {
+            return NotFound();
+        }
+        prestamo.DevolucionConfirmadaPorOperador = true;
+        prestamo.Regreso = DateTime.Now;
+        var idUsuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        var operador = _repoOperador.SelectWhere(o => o.IdUsuario == idUsuario).FirstOrDefault();
+        prestamo.OperadorRegreso = operador;
+        _repoPrestamo.Update(prestamo);
+        return RedirectToAction("Prestamos", "Home", new { socioId = prestamo.Socio.IdSocio });
+    }
+
+
+    public List<Prestamo> BuscarSocioPrestamos(uint? socioId)
+    {
+        var resultado = _repoPrestamo.SelectWhere(p => p.IdSocio == socioId).Include(p => p.OperadorEntrega).Include(p => p.OperadorRegreso).ToList();
+        foreach(Prestamo prestamo in resultado)
         {
             var ejemplar = _repoEjemplar.SelectWhere(e => e.IdEjemplar == prestamo.IdEjemplar).FirstOrDefault();
             var libro = _repoLibro.SelectWhere(l => l.IdLibro == ejemplar.IdLibro).FirstOrDefault();
             var titulo = _repoTitulo.SelectWhere(t => t.IdTitulo == libro.IdTitulo).FirstOrDefault();
             prestamo.Ejemplar.Libro.Titulo.titulo = titulo.titulo;
         }
-
-        return View(prestamos);
-    }
-
-    public IActionResult DevolverLibro(int idPrestamo)
-    {
-        var prestamo = _repoPrestamo.SelectWhere(p => p.IdPrestamo == idPrestamo).FirstOrDefault();
-        if (prestamo == null)
-        {
-            return NotFound();
-        }
-        return View(prestamo);
-    }
-
-    public async Task<IActionResult> EntregarLibro(int idPrestamo)
-    {
-        using (var transaction = await _repoPrestamo.BeginTransactionAsync())
-        {
-            try
-            {
-                var prestamo = _repoPrestamo.SelectWhere(p => p.IdPrestamo == idPrestamo).FirstOrDefault();
-                if (prestamo == null)
-                {
-                    return NotFound();
-                }
-
-                prestamo.Recibido = true;
-                _repoPrestamo.Update(prestamo);
-
-                var ejemplar = _repoEjemplar.SelectWhere(e => e.IdEjemplar == prestamo.IdEjemplar).FirstOrDefault();
-                if (ejemplar == null)
-                {
-                    return NotFound();
-                }
-
-                ejemplar.Disponible = true;
-                _repoEjemplar.Update(ejemplar);
-
-                transaction.Commit();
-                return RedirectToAction("Prestamos", "Home");
-            }
-            catch (Exception)
-            {
-                transaction.Rollback();
-                return StatusCode(500, "Error al entregar el libro");
-            }
-        }
-    }
-
-    public List<Prestamo> BuscarSocioPrestamos(uint? socioId)
-    {
-        var resultado = _repoPrestamo.SelectWhere(p => p.IdSocio == socioId).ToList();
         return resultado;
     }
 

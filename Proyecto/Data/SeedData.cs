@@ -256,8 +256,6 @@ public class SeedData
             {
                 Ejemplar = repoEjemplar.IdSelect(1),
                 IdEjemplar = 1,
-                IdOperadorEntrega = repoOperador.IdSelect(1).IdOperador,
-                IdOperadorRegreso = null,
                 IdPrestamo = 0,
                 IdSocio = repoSocio.IdSelect(1).IdSocio,
                 OperadorEntrega = repoOperador.IdSelect(1),
@@ -271,12 +269,9 @@ public class SeedData
             {
                 Ejemplar = repoEjemplar.IdSelect(2),
                 IdEjemplar = 2,
-                IdOperadorEntrega = repoOperador.IdSelect(2).IdOperador,
-                IdOperadorRegreso = null,
                 IdPrestamo = 0,
                 IdSocio = repoSocio.IdSelect(2).IdSocio,
                 OperadorEntrega = repoOperador.IdSelect(2),
-                OperadorRegreso = null,
                 Regreso = null,
                 Salida = DateTime.Now,
                 Socio = repoSocio.IdSelect(2)

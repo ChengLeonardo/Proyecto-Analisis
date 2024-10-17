@@ -11,6 +11,9 @@
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10" />
+    <PackageReference Include="Quartz" Version="3.13.0" />
+    <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.13.0" />
+    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.13.0" />
   </ItemGroup>
 
 </Project>

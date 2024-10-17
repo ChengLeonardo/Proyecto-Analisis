@@ -120,13 +120,11 @@ public class ProyectoDbContext : DbContext
 
         modelBuilder.Entity<Operador>()
             .HasMany(o => o.PrestamosEntregados)
-            .WithOne(p => p.OperadorEntrega)
-            .HasForeignKey(p => p.IdOperadorEntrega);
+            .WithOne(p => p.OperadorEntrega);
 
         modelBuilder.Entity<Operador>()
             .HasMany(o => o.PrestamosRegresados)
-            .WithOne(p => p.OperadorRegreso)
-            .HasForeignKey(p => p.IdOperadorRegreso);
+            .WithOne(p => p.OperadorRegreso);
 
         // Configuración para Socio
         modelBuilder.Entity<Socio>()

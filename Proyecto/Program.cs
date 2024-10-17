@@ -3,6 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Proyecto.Data;
 using Proyecto.Data.Repositorios;
 using Proyecto.Interfaces;
+using Proyecto.Models;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,14 +25,30 @@ builder.Services.AddScoped<IRepoSocio, RepoSocio>();
 builder.Services.AddScoped<IRepoTitulo, RepoTitulo>();
 builder.Services.AddScoped<IRepoGenero, RepoGenero>();
 builder.Services.AddScoped<IRepoUsuario, RepoUsuario>();
-builder.WebHost.UseUrls("http://localhost:5171");
+
+builder.Services.AddQuartz(q =>
+{
+    q.UseMicrosoftDependencyInjectionJobFactory();
+
+            var jobKey = new JobKey("VerificarPrestamosJob");
+            q.AddJob<VerificarPrestamosJob>(opts => opts.WithIdentity(jobKey));
+
+            q.AddTrigger(opts => opts
+                .ForJob(jobKey)
+                .WithIdentity("VerificarPrestamosTrigger")
+                .WithCronSchedule("0 0 0 * * ?")); // Se ejecuta todos los días a medianoche
+});
+
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+
+
 var options = new DbContextOptionsBuilder<ProyectoDbContext>()
     .UseMySql(connectionString, serverVersion)
     .Options;
 
 var context = new ProyectoDbContext(options);
 
-context.Database.EnsureCreated();
+context.Database.Migrate();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(options =>
         {

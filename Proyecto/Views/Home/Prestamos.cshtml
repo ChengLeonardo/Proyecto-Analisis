@@ -1,8 +1,8 @@
-@model List<Proyecto.Models.Prestamo>
+@model Proyecto.Models.PrestamosViewModel
 
 <h2>Préstamos</h2>
 
-@if (Model.Any())
+@if (Model.Prestamos.Any())
 {
     <table class="table">
         <thead>
@@ -15,17 +15,72 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var prestamo in Model)
+            @foreach (var prestamo in Model.Prestamos)
             {
                 <tr>
                     <td>@prestamo.IdPrestamo</td>
                     <td>@prestamo.Ejemplar.Libro.Titulo.titulo</td>
                     <td>@prestamo.Salida</td>
-                    <td>@(prestamo.Recibido ? "Devuelto" : "Pendiente")</td>
                     <td>
-                        @if (!prestamo.Recibido)
+                        @if (prestamo.Recibido)
                         {
-                            <a asp-action="EntregarLibro" asp-route-idPrestamo="@prestamo.IdPrestamo" class="btn btn-primary">Devolver</a>
+                            @:Devuelto
+                        }
+                        else if (prestamo.Cancelado)
+                        {
+                            @:Cancelado
+                        }
+                        else
+                        {
+                            @:Pendiente
+                        }
+                    </td>
+                    <td>
+
+                            @if (!prestamo.EntregadoPorOperador && !prestamo.Recibido)
+                            {
+                                @if (Model.EsSocio)
+                                {
+                                    <span>No lo ha recibido</span>
+                                }
+                                else if (Model.EsOperador || Model.EsAdministrador)
+                                {
+                                    <a asp-action="EntregarLibro" asp-route-idPrestamo="@prestamo.IdPrestamo" class="btn btn-primary">Entregar libro</a>
+                                }
+                            }
+                            else if (!prestamo.RecibidoConfirmadoPorSocio)
+                            {
+                                @if (Model.EsSocio)
+                                {
+                                    <a asp-action="ConfirmarRecibo" asp-route-idPrestamo="@prestamo.IdPrestamo" class="btn btn-primary">Confirmar recibo</a>
+                                }
+                                else if (Model.EsOperador || Model.EsAdministrador)
+                                {
+                                    <span>Esperando confirmar recibo</span>
+                                }
+                            }
+                            else if (!prestamo.DevueltoPorSocio)
+                            {
+                                @if (Model.EsSocio)
+                                {
+                                    <a asp-action="DevolverLibro" asp-route-idPrestamo="@prestamo.IdPrestamo" class="btn btn-primary">Devolver</a>
+                                }
+                                else if (Model.EsOperador || Model.EsAdministrador)
+                                {
+                                    <span>Entregado</span>
+                                }
+                            }
+                            else if (!prestamo.DevolucionConfirmadaPorOperador)
+                            {
+                                @if (Model.EsSocio)
+                                {
+                                    <span>Esperando confirmar devolución</span>
+                                }
+                                else if (Model.EsOperador || Model.EsAdministrador)
+                                {
+                                    <a asp-action="ConfirmarDevolucion" asp-route-idPrestamo="@prestamo.IdPrestamo" class="btn btn-primary">Confirmar devolución</a>
+                                }
+                            }
                         }
                     </td>
                 </tr>
