@@ -26,113 +26,147 @@ body {
     z-index: -1;
 }
 
-.wrapper {
+/*Diseño del Login y SingUp*/
+.wrapper{
     position: relative;
-    z-index: 1;
-    width: 420px;
+    width: 400px;
+    height: 440px;
     background: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, .5);
+    border-radius: 20px;
     backdrop-filter: blur(3px);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    color: #fff;
-    border-radius: 10px;
-    padding: 30px 40px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    -ms-border-radius: 10px;
-    -o-border-radius: 10px;
-    margin: auto;
+    box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: height .2s ease;
 }
 
-.wrapper h1 {
-    font-size: 36px;
+.wrapper.active{
+    height: 520px;
+}
+
+/*Diseño del Login*/
+.wrapper .form-box{
+    width: 100%;
+    padding: 40px;
+}
+
+.wrapper .form-box.Login{
+    transition: transform .18s ease;
+    transform: translateX(0);
+}
+
+.wrapper.active .form-box.Login{
+    transition: none;
+    transform: translateX(-400px);
+}
+
+.wrapper .form-box.SingUp{
+    position: absolute;
+    transition: none;
+    transform: translateX(400px);
+}
+
+.wrapper.active .form-box.SingUp{
+    transition: transform .18s ease;
+    transform: translateX(0);
+}
+
+/*Diseño del Titulo del Login*/
+.form-box h1{
+    font-size: 2em;
+    color: #fff;
     text-align: center;
 }
 
-.wrapper .input-box {
+/*Diseño de la Caja de Input*/
+.input-box{
     position: relative;
     width: 100%;
     height: 50px;
-    margin: 30px 0; 
+    border-bottom: 2px solid #fff;
+    margin: 30px 0;
 }
 
-.input-box input {
+/*Diseño de la Etiqueta de la Caja de Input*/
+.input-box label{
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    font-size: 1em;
+    color: #fff;
+    font-weight: 500;
+    pointer-events: none;
+    transition: .5s;
+}
+
+/*Diseño de la Caja de Input al pasar el cursor por encima*/
+.input-box input:focus~label,
+.input-box input:valid~label{
+    top: -5px;
+}
+
+/*Diseño de la Caja de Input*/
+.input-box input{
     width: 100%;
     height: 100%;
     background: transparent;
     border: none;
     outline: none;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 40px;
-    font-size: 16px;
-    color: #fff;
-    padding: 20px 45px 20px 20px;
-}
-
-.input-box input::placeholder {
+    font-size: 1em;
+    font-weight: 600;
+    padding: 0 35px 0 5px;
     color: #fff;
 }
 
-.input-box i {
+/*Diseño del Icono de la Caja de Input*/
+.input-box .icon{
     position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 20px;
+    right: 8px;
+    font-size: 1.2em;
     color: #fff;
+    line-height: 57px;
 }
 
-.wrapper .remember-forgot {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14.5px;
-    margin: -15px 0 15px;
-}
-
-.remember-forgot label input {
-    accent-color: #fff;
-    margin-right: 3px;
-}
-
-.remember-forgot a {
-    color: #fff;
-    text-decoration: none;
-}
-
-.remember-forgot a:hover {
-    text-decoration: underline;
-}
-
-.wrapper .btn {
+/*Diseño del Boton de Inicio de Sesion*/
+.btn{
     width: 100%;
     height: 45px;
     background: #fff;
     border: none;
     outline: none;
-    border-radius: 40px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 16px;
-    color: #333;
-    font-weight: 600;
-    -webkit-border-radius: 40px;
-    -moz-border-radius: 40px;
-    -ms-border-radius: 40px;
-    -o-border-radius: 40px;
+    font-size: 1em;
+    color: #162938;
+    font-weight: 500;
 }
 
-.wrapper .register-link {
-    font-size: 14.5px;
-    text-align: center;
-    margin: 20px 0 10px;
+/*Diseño del Boton de Inicio de Sesion al pasar el cursor por encima*/
+.btn:hover{
+    background: transparent;
+    color: #fff;
+    border: 2px solid #fff;
 }
 
-.register-link p a {
+.login-register{
+    font-size: .9em;
+    font-weight: 500;
+    color: #fff;
+    margin: 25px 0 10px;
+}   
+
+/*Diseño del Link de Registro*/
+.login-register p a{
     color: #fff;
     text-decoration: none;
     font-weight: 600;
 }
 
-.register-link p a:hover {
+/*Diseño del Link de Registro al pasar el cursor por encima*/
+.login-register p a:hover{
     text-decoration: underline;
 }
