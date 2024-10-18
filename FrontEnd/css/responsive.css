@@ -6,7 +6,7 @@ File Name: responsive.css
 
 @media (min-width: 992px) and (max-width: 1199px) {
     .slider_main {
-       padding-top: 9%;
+        padding-top: 9%;
     }
     .navigation.navbar-dark .navbar-nav .nav-link {
         padding: 15px 26px;
@@ -21,7 +21,7 @@ File Name: responsive.css
         padding: 90px 0;
     }
     #myCarousel a.carousel-control-prev {
-       left: 41%;
+        left: 41%;
     }
     ul.fullink li {
         padding: 0px 16px;
@@ -41,7 +41,7 @@ File Name: responsive.css
 
 @media (min-width: 768px) and (max-width: 991px) {
     .slider_main {
-       padding-top: 14%;
+        padding-top: 14%;
     }
     .header {
         padding: 27px 10px;
@@ -266,8 +266,7 @@ File Name: responsive.css
         padding-left: 0px;
     }
     .testimonial .titlepage {
-        padding-bottom: [0;
-        ]
+        padding-bottom: 0;
     }
     .testimonial {
         padding: 90px 0 10px 0;

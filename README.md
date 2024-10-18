@@ -39,12 +39,6 @@ _Las siguientes herramientas y tecnologías fueron utilizadas para crear este pr
 ## Autores ✒️
 
 
-* **Leonardo Cheg** - *Desarrollo* - [Leonardo](https://github.com/ChengLeonardo)
-
-* **Miguel Verdugues** - *Desarrollo* - [Miguel2433](https://github.com/miguel2433)
-
-* **Josu Duran** - *Documentación* - [Magician](https://github.com/JosuGuzman)
-
 ##
   ```json
 appsettings.json configuration
