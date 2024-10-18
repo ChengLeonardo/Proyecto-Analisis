@@ -28,6 +28,17 @@
             </div>
         </div>
     }
+    @if (Model.Administrador == true)
+    {
+        <form asp-controller="Home" asp-action="BuscarOperador" method="get" class="form-inline">
+            <div class="input-group w-100">
+                <input type="text" name="query" class="form-control" placeholder="Buscar operador...">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Buscar Operador</button>
+                </div>
+            </div>
+        </form>
+    }
     else if (Model.EsOperador == false)
     {
         <a asp-controller="Home" asp-action="Prestamos" class="btn btn-primary">Ver Préstamos</a>

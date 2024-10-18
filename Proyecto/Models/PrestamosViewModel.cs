@@ -11,5 +11,6 @@ namespace Proyecto.Models
         public bool EsSocio { get; set; }
         public bool EsOperador { get; set; }
         public bool EsAdministrador { get; set; }
+        public bool EsActivo { get; set; }
     }
 }

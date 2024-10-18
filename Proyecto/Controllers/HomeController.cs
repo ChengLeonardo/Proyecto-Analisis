@@ -6,14 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Proyecto.Interfaces;
 using Proyecto.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Proyecto.Models;
-using System.Security.Cryptography;
-using System.Text;
-
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Proyecto.Controllers;
 
@@ -120,7 +113,8 @@ public class HomeController : Controller
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, nuevoUsuario.IdUsuario.ToString(), ClaimValueTypes.String),
-                new Claim(ClaimTypes.Role, nuevoUsuario.TipoUsuario.ToString(), ClaimValueTypes.String)
+                new Claim(ClaimTypes.Role, nuevoUsuario.TipoUsuario.ToString(), ClaimValueTypes.String),
+                new Claim(ClaimTypes.Email, nuevoUsuario.Email, ClaimValueTypes.String),
             };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -141,12 +135,13 @@ public class HomeController : Controller
             var usuario = _repoUsuario.SelectWhere(usuario => usuario.NombreUsuario == model.Usuario).FirstOrDefault();
 
 
-            if (usuario != null && BCrypt.Net.BCrypt.Verify(model.Pass, usuario.Pass))
+            if (usuario != null && BCrypt.Net.BCrypt.Verify(model.Pass, usuario.Pass) && usuario.Activo)
             {
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
-                    new Claim(ClaimTypes.Role, usuario.TipoUsuario.ToString(), ClaimValueTypes.String)
+                    new Claim(ClaimTypes.Role, usuario.TipoUsuario.ToString(), ClaimValueTypes.String),
+                    new Claim(ClaimTypes.Email, usuario.Email, ClaimValueTypes.String),
                 };
                 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -180,6 +175,10 @@ public class HomeController : Controller
         if(HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Operador")
         {
             model.EsOperador = true;
+        }
+        if(HttpContext.User.FindFirst(ClaimTypes.Email)?.Value == "admin@gmail.com")
+        {
+            model.Administrador = true;
         }
 
         var prestamos = _repoPrestamo.Select().Include(p => p.Ejemplar).ToList();
@@ -684,58 +683,79 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public IActionResult HacerPrestamo(int idLibro)
+    public async Task<IActionResult> HacerPrestamo(int idLibro)
     {
-        if (HttpContext.User.FindFirst(ClaimTypes.Role)?.Value != "Socio")
+        using (var transaction = await _repoPrestamo.BeginTransactionAsync())
         {
-            return Forbid();
-        }
-
-        if (ModelState.IsValid)
-        {
-            var ejemplar = _repoEjemplar.SelectWhere(e => e.IdLibro == idLibro && e.Disponible).FirstOrDefault();
-            if (ejemplar == null)
+            try
             {
-                ModelState.AddModelError("", "No hay ejemplares disponibles de este libro.");
+                if (HttpContext.User.FindFirst(ClaimTypes.Role)?.Value != "Socio")
+                {
+                    await transaction.RollbackAsync();
+                    return Forbid();
+                }
+
+                if (ModelState.IsValid)
+                {
+                    var ejemplar = _repoEjemplar.SelectWhere(e => e.IdLibro == idLibro && e.Disponible).FirstOrDefault();
+                    if (ejemplar == null)
+                    {
+                        ModelState.AddModelError("", "No hay ejemplares disponibles de este libro.");
+                        await transaction.RollbackAsync();
+                        return RedirectToAction("DetalleLibro", new { id = idLibro });
+                    }
+                    ejemplar.Disponible = false;
+                    _repoEjemplar.Update(ejemplar);
+                    var idUsuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+                    var socio = _repoSocio.SelectWhere(s => s.IdUsuario == idUsuario).FirstOrDefault();
+                    if (socio == null)
+                    {
+                        await transaction.RollbackAsync();
+                        throw new Exception("No se encontró el socio asociado a este usuario.");
+                    }
+                    var prestamo = new Prestamo
+                    {
+                        IdEjemplar = ejemplar.IdEjemplar,
+                        IdSocio = socio.IdSocio,
+                        Salida = DateTime.Now,
+                        Recibido = false,
+                        Socio = socio
+                    };
+
+                    _repoPrestamo.Insert(prestamo, "IdPrestamo");
+
+                    return RedirectToAction("Prestamos", "Home", new { socioId = socio.IdSocio });
+                }
+                
+                await transaction.CommitAsync();
                 return RedirectToAction("DetalleLibro", new { id = idLibro });
+
             }
-            var idUsuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var socio = _repoSocio.SelectWhere(s => s.IdUsuario == idUsuario).FirstOrDefault();
-            if (socio == null)
+            catch (Exception ex)
             {
-                throw new Exception("No se encontró el socio asociado a este usuario.");
+                await transaction.RollbackAsync();
+                return StatusCode(500, "Error al hacer el préstamo");
             }
-            var prestamo = new Prestamo
-            {
-                IdEjemplar = ejemplar.IdEjemplar,
-                IdSocio = socio.IdSocio,
-                Salida = DateTime.Now,
-                Recibido = false,
-                Socio = socio
-            };
-
-            _repoPrestamo.Insert(prestamo, "IdPrestamo");
-
-            return RedirectToAction("Prestamos", "Home", new { socioId = socio.IdSocio });
         }
-
-        return RedirectToAction("DetalleLibro", new { id = idLibro });
     }
 
     public IActionResult Prestamos(uint? socioId)
     {
         var model = new PrestamosViewModel();
+        var usuario = _repoUsuario.Select().Include(u => u.Socio).FirstOrDefault(u => u.Socio.IdSocio == socioId);
         List<Prestamo> prestamos = new List<Prestamo>();
-        if (HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Operador" || HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Administrador")
+        if (HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Operador" || HttpContext.User.FindFirst(ClaimTypes.Email)?.Value == "admin@gmail.com")
         {
             prestamos = BuscarSocioPrestamos(socioId);
+
             model = new PrestamosViewModel
             {
                 Prestamos = prestamos,
                 EsSocio = false,
                 EsOperador = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Operador",
-                EsAdministrador = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Administrador"
+                EsAdministrador = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value == "admin@gmail.com",
+                EsActivo = usuario.Activo
             };
             return View(model);
         }
@@ -746,22 +766,15 @@ public class HomeController : Controller
         {
             throw new Exception("No se encontró el socio asociado a este usuario.");
         }
-        prestamos = _repoPrestamo.SelectWhere(p => p.IdSocio == socio.IdSocio).Include(p => p.OperadorEntrega).Include(p => p.OperadorRegreso).ToList();
-        foreach(Prestamo prestamo in prestamos)
-        {
-            Console.WriteLine(prestamo.IdPrestamo);
-            var ejemplar = _repoEjemplar.SelectWhere(e => e.IdEjemplar == prestamo.IdEjemplar).FirstOrDefault();
-            var libro = _repoLibro.SelectWhere(l => l.IdLibro == ejemplar.IdLibro).FirstOrDefault();
-            var titulo = _repoTitulo.SelectWhere(t => t.IdTitulo == libro.IdTitulo).FirstOrDefault();
-            Console.WriteLine(titulo.titulo);
-            prestamo.Ejemplar.Libro.Titulo.titulo = titulo.titulo;
-        }
+        prestamos = _repoPrestamo.SelectWhere(p => p.IdSocio == socio.IdSocio).Include(p => p.OperadorEntrega).Include(p => p.OperadorRegreso).Include(p => p.Ejemplar).Include(p => p.Ejemplar.Libro).Include(p => p.Ejemplar.Libro.Titulo).ToList();
+
         model = new PrestamosViewModel
         {
             Prestamos = prestamos,
             EsSocio = true,
             EsOperador = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Operador",
-            EsAdministrador = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Administrador"
+            EsAdministrador = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value == "admin@gmail.com",
+            EsActivo = usuario.Activo
         };
         return View(model);
     }
@@ -812,16 +825,30 @@ public class HomeController : Controller
         return RedirectToAction("Prestamos", "Home", new { socioId = prestamo.Socio.IdSocio });
     }
 
-    public IActionResult CancelarPrestamo(int idPrestamo)
+    public async Task<IActionResult> CancelarPrestamo(int idPrestamo)
     {
-        var prestamo = _repoPrestamo.SelectWhere(p => p.IdPrestamo == idPrestamo).Include(p => p.Socio).FirstOrDefault();
-        if (prestamo == null)
+        using (var transaction = await _repoPrestamo.BeginTransactionAsync())
         {
-            return NotFound();
+            try
+            {
+                var prestamo = _repoPrestamo.SelectWhere(p => p.IdPrestamo == idPrestamo).Include(p => p.Socio).FirstOrDefault();
+                if (prestamo == null)
+                {
+                    return NotFound();
+                }
+                var ejemplar = _repoEjemplar.SelectWhere(e => e.IdEjemplar == prestamo.IdEjemplar).FirstOrDefault();
+                ejemplar.Disponible = true;
+                _repoEjemplar.Update(ejemplar);
+                prestamo.Cancelado = true;
+                _repoPrestamo.Update(prestamo);
+                return RedirectToAction("Prestamos", "Home", new { socioId = prestamo.Socio.IdSocio });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, "Error al cancelar el préstamo");
+            }
         }
-        prestamo.Cancelado = true;
-        _repoPrestamo.Update(prestamo);
-        return RedirectToAction("Prestamos", "Home", new { socioId = prestamo.Socio.IdSocio });
     }
 
     public IActionResult DevolverLibro(int idPrestamo)
@@ -836,20 +863,34 @@ public class HomeController : Controller
         return RedirectToAction("Prestamos", "Home", new { socioId = prestamo.Socio.IdSocio });
     }
 
-    public IActionResult ConfirmarDevolucion(int idPrestamo)
+    public async Task<IActionResult> ConfirmarDevolucion(int idPrestamo)
     {
-        var prestamo = _repoPrestamo.SelectWhere(p => p.IdPrestamo == idPrestamo).Include(p => p.Socio).FirstOrDefault();
-        if (prestamo == null)
+        using (var transaction = await _repoPrestamo.BeginTransactionAsync())
         {
-            return NotFound();
+            try
+            {
+                var prestamo = _repoPrestamo.SelectWhere(p => p.IdPrestamo == idPrestamo).Include(p => p.Socio).FirstOrDefault();
+                if (prestamo == null)
+                {
+                    return NotFound();
+                }
+                var ejemplar = _repoEjemplar.SelectWhere(e => e.IdEjemplar == prestamo.IdEjemplar).FirstOrDefault();
+                ejemplar.Disponible = true;
+                _repoEjemplar.Update(ejemplar);
+                prestamo.DevolucionConfirmadaPorOperador = true;
+                prestamo.Regreso = DateTime.Now;
+                var idUsuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var operador = _repoOperador.SelectWhere(o => o.IdUsuario == idUsuario).FirstOrDefault();
+                prestamo.OperadorRegreso = operador;
+                _repoPrestamo.Update(prestamo);
+                return RedirectToAction("Prestamos", "Home", new { socioId = prestamo.Socio.IdSocio });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, "Error al confirmar la devolución");
+            }
         }
-        prestamo.DevolucionConfirmadaPorOperador = true;
-        prestamo.Regreso = DateTime.Now;
-        var idUsuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-        var operador = _repoOperador.SelectWhere(o => o.IdUsuario == idUsuario).FirstOrDefault();
-        prestamo.OperadorRegreso = operador;
-        _repoPrestamo.Update(prestamo);
-        return RedirectToAction("Prestamos", "Home", new { socioId = prestamo.Socio.IdSocio });
     }
 
 
@@ -868,7 +909,72 @@ public class HomeController : Controller
 
     public IActionResult BuscarSocio(string query)
     {
-        var resultado = _repoSocio.SelectWhere(s => s.Usuario.Nombre.Contains(query) || s.Usuario.Apellido.Contains(query) || s.Usuario.Email == query || s.Usuario.NombreUsuario == query).Include(s => s.Usuario).ToList();
+        if(query == null || query.Length < 3)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        var resultado = _repoSocio.Select()
+            .Include(s => s.Usuario)
+            .AsEnumerable() // 将查询结果加载到内存中
+            .Select(s => new
+            {
+                Socio = s,
+                Similitud = CalcularSimilitud(query, s.Usuario.Nombre) + CalcularSimilitud(query, s.Usuario.Apellido) + CalcularSimilitud(query, s.Usuario.Email) + CalcularSimilitud(query, s.Usuario.NombreUsuario)
+            })
+            .Where(x => x.Similitud >= 0.7) // 在内存中进行过滤
+            .OrderByDescending(x => x.Similitud)
+            .Select(x => x.Socio)
+            .ToList();
         return View(resultado);
+    }
+
+    public IActionResult BuscarOperador(string query)
+    {
+        if(query == null || query.Length < 3)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        var resultado = _repoOperador.Select()
+            .Include(o => o.Usuario)
+            .AsEnumerable() // 将查询结果加载到内存中
+            .Select(o => new
+            {
+                Operador = o,
+                Similitud = CalcularSimilitud(query, o.Usuario.Nombre) + CalcularSimilitud(query, o.Usuario.Apellido) + CalcularSimilitud(query, o.Usuario.Email) + CalcularSimilitud(query, o.Usuario.NombreUsuario)
+            })
+            .Where(x => x.Similitud >= 0.7) // 在内存中进行过滤
+            .OrderByDescending(x => x.Similitud)
+            .Select(x => x.Operador)
+            .ToList();
+        return View(resultado);
+    }
+
+    public IActionResult EliminarUsuario(int idUsuario)
+    {
+        var usuario = _repoUsuario.SelectWhere(u => u.IdUsuario == idUsuario).FirstOrDefault();
+        if(HttpContext.User.FindFirst(ClaimTypes.Email)?.Value == "admin@gmail.com")
+        {
+            _repoUsuario.Delete(usuario);
+            if(usuario.TipoUsuario == TipoUsuario.Operador)
+            {
+                return RedirectToAction("BuscarOperador", "Home", new { query = usuario.NombreUsuario });
+            }
+            else if(usuario.TipoUsuario == TipoUsuario.Socio)
+            {
+                return RedirectToAction("BuscarSocio", "Home", new { query = usuario.NombreUsuario });
+            }
+        
+            return RedirectToAction("Index", "Home");
+        }
+        else if(HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Operador")
+        {
+            usuario.Activo = false;
+            _repoUsuario.Update(usuario);
+            return RedirectToAction("BuscarSocio", "Home", new { query = usuario.NombreUsuario });
+        }
+        else
+        {
+            return RedirectToAction("Logout", "Home");
+        }
     }
 }

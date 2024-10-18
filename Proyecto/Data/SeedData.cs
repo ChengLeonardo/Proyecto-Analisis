@@ -17,7 +17,7 @@ public class SeedData
                 IdUsuario = 0,
                 Nombre = "Leonardo",
                 Apellido = "Cheng",
-                Email = "leonardo.chenget12de1@gmail.com",
+                Email = "admin@gmail.com",
                 NombreUsuario = "admin",
                 Pass = BCrypt.Net.BCrypt.HashPassword("admin"),
                 TipoUsuario = TipoUsuario.Operador
@@ -261,7 +261,6 @@ public class SeedData
                 OperadorEntrega = repoOperador.IdSelect(1),
                 OperadorRegreso = null,
                 Regreso = null,
-                Salida = DateTime.Now,
                 Socio = repoSocio.IdSelect(1)
             };
 
@@ -273,7 +272,6 @@ public class SeedData
                 IdSocio = repoSocio.IdSelect(2).IdSocio,
                 OperadorEntrega = repoOperador.IdSelect(2),
                 Regreso = null,
-                Salida = DateTime.Now,
                 Socio = repoSocio.IdSelect(2)
             };
 

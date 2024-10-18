@@ -40,6 +40,10 @@ public class ProyectoDbContext : DbContext
             .Property(u => u.TipoUsuario)
             .HasColumnName("TipoUsuario");
 
+        modelBuilder.Entity<Usuario>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+
         // Configuración para Editorial
         modelBuilder.Entity<Editorial>()
             .HasKey(e => e.IdEditorial);
