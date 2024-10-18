@@ -5,9 +5,9 @@ public class Prestamo
     public int IdPrestamo { get; set; }
     public uint IdEjemplar { get; set; }
     public int IdSocio { get; set; }
-    public DateTime? Salida { get; set; }
-    public DateTime? Regreso { get; set; }
-    public bool Recibido { get; set; }
+    public DateTime? Salida { get; set; } = null;
+    public DateTime? Regreso { get; set; } = null;
+    public bool Recibido { get; set; } = false;
     public Ejemplar Ejemplar { get; set; }
     public Socio Socio { get; set; }
     public Operador? OperadorEntrega { get; set; }

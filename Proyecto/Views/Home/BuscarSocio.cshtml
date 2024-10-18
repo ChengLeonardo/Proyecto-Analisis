@@ -13,6 +13,7 @@
                 <th>Teléfono</th>
                 <th>Nombre de Usuario</th>
                 <th>Acciones</th>
+                <th>Eliminar</th>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +27,16 @@
                     <td>@socio.Usuario.NombreUsuario</td>
                     <td>
                         <a asp-action="Prestamos" asp-route-socioId="@socio.IdSocio" class="btn btn-primary">Ver Préstamos</a>
+                    </td>
+                    <td>
+                        @if(socio.Usuario.Activo == true)
+                        {
+                            <a asp-action="EliminarUsuario" asp-route-idUsuario="@socio.Usuario.IdUsuario" class="btn btn-danger">Eliminar</a>
+                        }
+                        else
+                        {
+                            <p>Usuario eliminado</p>
+                        }
                     </td>
                 </tr>
             }

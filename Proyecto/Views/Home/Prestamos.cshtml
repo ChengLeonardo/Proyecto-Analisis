@@ -10,6 +10,7 @@
                 <th>ID Préstamo</th>
                 <th>Libro</th>
                 <th>Fecha de Salida</th>
+                <th>Fecha de Regreso</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
@@ -20,23 +21,33 @@
                 <tr>
                     <td>@prestamo.IdPrestamo</td>
                     <td>@prestamo.Ejemplar.Libro.Titulo.titulo</td>
-                    <td>@prestamo.Salida</td>
+                    <td>@(prestamo.Salida != null ? prestamo.Salida.Value.ToString("dd/MM/yyyy") : "-")</td>
+                    <td>@(prestamo.Regreso != null ? prestamo.Regreso.Value.ToString("dd/MM/yyyy") : "-")</td>
                     <td>
-                        @if (prestamo.Recibido)
+                        @if(!prestamo.EntregadoPorOperador && !prestamo.RecibidoConfirmadoPorSocio && !prestamo.DevueltoPorSocio && !prestamo.DevolucionConfirmadaPorOperador)
                         {
-                            @:Devuelto
+                            <p>En curso</p>
                         }
-                        else if (prestamo.Cancelado)
+                        else if(prestamo.EntregadoPorOperador && !prestamo.RecibidoConfirmadoPorSocio)
                         {
-                            @:Cancelado
+                            <p>Esperando confirmación de socio</p>
+                        }
+                        else if(prestamo.RecibidoConfirmadoPorSocio && !prestamo.DevueltoPorSocio)
+                        {
+                            <p>Esperando devolución</p>
+                        }
+                        else if(prestamo.DevueltoPorSocio && !prestamo.DevolucionConfirmadaPorOperador)
+                        {
+                            <p>Esperando confirmación de devolución</p>
                         }
                         else
                         {
-                            @:Pendiente
+                            <p>Devuelto</p>
                         }
                     </td>
                     <td>
-
+                        @if(Model.EsActivo)
+                        {
                             @if (!prestamo.EntregadoPorOperador && !prestamo.Recibido)
                             {
                                 @if (Model.EsSocio)
@@ -81,6 +92,14 @@
                                     <a asp-action="ConfirmarDevolucion" asp-route-idPrestamo="@prestamo.IdPrestamo" class="btn btn-primary">Confirmar devolución</a>
                                 }
                             }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        }
+                        else
+                        {
+                            <span>Usuario inactivo</span>
                         }
                     </td>
                 </tr>
