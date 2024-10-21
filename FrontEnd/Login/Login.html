@@ -61,6 +61,43 @@
                     <input type="password" class="password" required>
                     <label> Verificar </label>
                 </div>
+                <!-- email, tipo usuario (tiene dos opciones el usuario, operador o socio, si elige socio, no tiene que hacer nada, y si elije operador, tiene que ingresar un codigo de verificacion, aca te proporciono el codigo que intente poner: -->
+                <!-- <div class="input-box">
+                    <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                    <input name="email" type="email">
+                    <label>Email</label>
+                </div>
+                <div class="input-box">
+                    <label for="TipoUsuario">Tipo de Usuario</label>
+                    <select name="TipoUsuario" id="TipoUsuario">
+                        <option value="Socio">Socio</option>
+                        <option value="Operador">Operador</option>
+                    </select>
+                </div>
+                <div id="codigoOperadorDiv" class="input-box" style="display: none;">
+                    <label for="CodigoOperador">Código del Operador</label>
+                    <input name="CodigoOperador" id="CodigoOperador" class="pl-12 text-black w-full h-12 rounded-full bg-white outline-none" type="text">
+                </div> -->
+
+                <!--     
+                <script>
+                    function verificarTipoUsuario() {
+                        var tipoUsuario = document.getElementById('TipoUsuario');
+                        var codigoOperadorDiv = document.getElementById('codigoOperadorDiv');
+                        if (tipoUsuario.value === 'Operador') {
+                            codigoOperadorDiv.style.display = 'block';
+                        } else {
+                            codigoOperadorDiv.style.display = 'none';
+                        }
+                    }
+
+                    // Verificar al cargar la página
+                    document.addEventListener('DOMContentLoaded', verificarTipoUsuario);
+
+                    // Verificar cuando cambia el valor del select
+                    document.getElementById('TipoUsuario').addEventListener('change', verificarTipoUsuario);
+                </script>
+                -->
                 <button type="submit" class="btn"> SingUp </button>
                 <div class="login-register">
                     <p> Ya tienes una Cuenta? <a href="#" class="login-link">Inicia Sesion</a></p>

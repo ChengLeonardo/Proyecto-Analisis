@@ -11,20 +11,10 @@
         <input asp-for="Pass" id="Password" class="pl-12 text-black w-full h-12 rounded-full bg-white outline-none" type="password" required>
         <span asp-validation-for="Pass" class="text-danger"></span>
     </div>
-    <div class="w-4/5 relative">
-        <label for="Apellido">Apellido</label>
-        <input asp-for="Apellido" id="Apellido" class="pl-12 text-black w-full h-12 rounded-full bg-white outline-none" type="text" required>
-        <span asp-validation-for="Apellido" class="text-danger"></span>
-    </div>
         <div class="w-4/5 relative">
         <label for="Apellido">Email</label>
         <input asp-for="Email" id="Email" class="pl-12 text-black w-full h-12 rounded-full bg-white outline-none" type="email" required>
         <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div class="w-4/5 relative">
-        <label for="Nombre">Nombre</label>
-        <input asp-for="Nombre" id="Nombre" class="pl-12 text-black w-full h-12 rounded-full bg-white outline-none" type="text" required>
-        <span asp-validation-for="Nombre" class="text-danger"></span>
     </div>
     <div class="w-4/5 relative">
         <label for="TipoUsuario">Tipo de Usuario</label>
@@ -43,22 +33,3 @@
     <a asp-action="Login" asp-controller="Home" class="w-4/5 h-12 rounded-full bg-gray-300 text-black font-bold flex items-center justify-center mt-4">Iniciar Sesión</a>
 </form>
 
-@section Scripts {
-    <script>
-        function verificarTipoUsuario() {
-            var tipoUsuario = document.getElementById('TipoUsuario');
-            var codigoOperadorDiv = document.getElementById('codigoOperadorDiv');
-            if (tipoUsuario.value === '@TipoUsuario.Operador') {
-                codigoOperadorDiv.style.display = 'block';
-            } else {
-                codigoOperadorDiv.style.display = 'none';
-            }
-        }
-
-        // Verificar al cargar la página
-        document.addEventListener('DOMContentLoaded', verificarTipoUsuario);
-
-        // Verificar cuando cambia el valor del select
-        document.getElementById('TipoUsuario').addEventListener('change', verificarTipoUsuario);
-    </script>
-}

@@ -66,11 +66,11 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Register(RegisterViewModel model)
+    public async Task<IActionResult> Register(LoginRegisterViewModel model)
     {
         if (ModelState.IsValid)
         {
-            var usuarioExistente = await _repoUsuario.SelectWhere(u => u.NombreUsuario == model.Usuario)
+            var usuarioExistente = await _repoUsuario.SelectWhere(u => u.NombreUsuario == model.Register.Usuario)
                 .FirstOrDefaultAsync();
 
             if (usuarioExistente != null)
@@ -79,7 +79,7 @@ public class HomeController : Controller
                 return View(model);
             }
 
-            if (model.TipoUsuario == TipoUsuario.Operador && model.CodigoOperador != "CodigoSecreto123")
+            if (model.Register.TipoUsuario == TipoUsuario.Operador && model.Register.CodigoOperador != "CodigoSecreto123")
             {
                 ModelState.AddModelError("CodigoOperador", "Código de registro de operador inválido.");
                 return View(model);
@@ -87,15 +87,13 @@ public class HomeController : Controller
 
             var nuevoUsuario = new Usuario
             {
-                Nombre = model.Nombre,
-                Apellido = model.Apellido,
-                Email = model.Email,
-                NombreUsuario = model.Usuario,
-                Pass = BCrypt.Net.BCrypt.HashPassword(model.Pass),
-                TipoUsuario = model.TipoUsuario
+                Email = model.Register.Email,
+                NombreUsuario = model.Register.Usuario,
+                Pass = BCrypt.Net.BCrypt.HashPassword(model.Register.Pass),
+                TipoUsuario = model.Register.TipoUsuario
             };
 
-            if (model.TipoUsuario == TipoUsuario.Operador)
+            if (model.Register.TipoUsuario == TipoUsuario.Operador)
             {
                 var operador = new Operador { Usuario = nuevoUsuario };
                 _repoOperador.Insert(operador, "IdOperador");
@@ -128,14 +126,14 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(LoginViewModel model)
+    public async Task<IActionResult> Login(LoginRegisterViewModel model)
     {
         if (ModelState.IsValid)
         {
-            var usuario = _repoUsuario.SelectWhere(usuario => usuario.NombreUsuario == model.Usuario).FirstOrDefault();
+            var usuario = _repoUsuario.SelectWhere(usuario => usuario.NombreUsuario == model.Login.Usuario).FirstOrDefault();
 
 
-            if (usuario != null && BCrypt.Net.BCrypt.Verify(model.Pass, usuario.Pass) && usuario.Activo)
+            if (usuario != null && BCrypt.Net.BCrypt.Verify(model.Login.Pass, usuario.Pass) && usuario.Activo)
             {
                 var claims = new List<Claim>
                 {
@@ -919,7 +917,7 @@ public class HomeController : Controller
             .Select(s => new
             {
                 Socio = s,
-                Similitud = CalcularSimilitud(query, s.Usuario.Nombre) + CalcularSimilitud(query, s.Usuario.Apellido) + CalcularSimilitud(query, s.Usuario.Email) + CalcularSimilitud(query, s.Usuario.NombreUsuario)
+                Similitud = CalcularSimilitud(query, s.Usuario.Email) + CalcularSimilitud(query, s.Usuario.NombreUsuario)
             })
             .Where(x => x.Similitud >= 0.7) // 在内存中进行过滤
             .OrderByDescending(x => x.Similitud)
@@ -940,7 +938,7 @@ public class HomeController : Controller
             .Select(o => new
             {
                 Operador = o,
-                Similitud = CalcularSimilitud(query, o.Usuario.Nombre) + CalcularSimilitud(query, o.Usuario.Apellido) + CalcularSimilitud(query, o.Usuario.Email) + CalcularSimilitud(query, o.Usuario.NombreUsuario)
+                Similitud = CalcularSimilitud(query, o.Usuario.Email) + CalcularSimilitud(query, o.Usuario.NombreUsuario)
             })
             .Where(x => x.Similitud >= 0.7) // 在内存中进行过滤
             .OrderByDescending(x => x.Similitud)

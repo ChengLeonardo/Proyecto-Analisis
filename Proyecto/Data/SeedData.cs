@@ -15,8 +15,6 @@ public class SeedData
             var usuarioAdmin = new Usuario
             {
                 IdUsuario = 0,
-                Nombre = "Leonardo",
-                Apellido = "Cheng",
                 Email = "admin@gmail.com",
                 NombreUsuario = "admin",
                 Pass = BCrypt.Net.BCrypt.HashPassword("admin"),
@@ -32,8 +30,6 @@ public class SeedData
             var usuarioOperador1 = new Usuario
             {
                 IdUsuario = 0,
-                Nombre = "Cheng",
-                Apellido = "Leonardo",
                 Email = "leonardo.chen1@gmail.com",
                 NombreUsuario = "operador1",
                 Pass = BCrypt.Net.BCrypt.HashPassword("operador1"),
@@ -49,8 +45,6 @@ public class SeedData
             var usuarioOperador2 = new Usuario
             {
                 IdUsuario = 0,
-                Nombre = "Maria",
-                Apellido = "Gomez",
                 Email = "maria.gomez@gmail.com",
                 NombreUsuario = "operador2",
                 Pass = BCrypt.Net.BCrypt.HashPassword("operador2"),
@@ -71,8 +65,6 @@ public class SeedData
             var usuarioSocio1 = new Usuario
             {
                 IdUsuario = 0,
-                Nombre = "Juan",
-                Apellido = "Pérez",
                 Email = "juan.perez@example.com",
                 NombreUsuario = "socio1",
                 Pass = BCrypt.Net.BCrypt.HashPassword("socio1"),
@@ -91,8 +83,6 @@ public class SeedData
             var usuarioSocio2 = new Usuario
             {
                 IdUsuario = 0,
-                Nombre = "María",
-                Apellido = "Gómez",
                 Email = "maria.gomez@example.com",
                 NombreUsuario = "socio2",
                 Pass = BCrypt.Net.BCrypt.HashPassword("socio2"),

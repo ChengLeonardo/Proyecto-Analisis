@@ -1,4 +1,4 @@
-@model Proyecto.Models.LoginViewModel
+@model Proyecto.Models.LoginRegisterViewModel
 @{
     ViewData["Title"] = "Login";
 }
@@ -21,14 +21,14 @@
                 @Html.ValidationSummary(true)
                 <div class="input-box">
                     <span class="icon"><ion-icon name="person"></ion-icon></span>
-                    <input asp-for="Usuario" type="text" required>
+                    <input asp-for="@Model.Login.Usuario" type="text" required>
                     <label> Usuario </label>
                 </div>
                 <div class="input-box">
                     <span class="icon toggle-password">
                         <ion-icon name="lock-closed"></ion-icon>
                     </span>
-                    <input asp-for="Pass" type="password" class="password" required>
+                    <input asp-for="@Model.Login.Pass" type="password" class="password" required>
                     <label> Contraseña </label>
                 </div>
                 <button type="submit" class="btn"> Login </button>
@@ -44,22 +44,40 @@
             <form asp-action="Register" asp-controller="Home" method="post">
                 <div class="input-box">
                     <span class="icon"><ion-icon name="person"></ion-icon></span>
-                    <input type="text" name="Username" required>
-                    <label> Usuario </label>
+                    <input asp-for="@Model.Register.Usuario" type="text">
+                    <label>Nombre Usuario</label>
                 </div>
                 <div class="input-box">
                     <span class="icon toggle-password">
                         <ion-icon name="lock-closed"></ion-icon>
                     </span>
-                    <input type="password" name="Password" class="password" required>
+                    <input type="password" class="password" asp-for="@Model.Register.Pass" >
                     <label> Contraseña </label>
                 </div>
                 <div class="input-box">
                     <span class="icon toggle-password">
                         <ion-icon name="lock-closed"></ion-icon>
                     </span>
-                    <input type="password" name="ConfirmPassword" class="password" required>
+                    <input type="password" class="password" required>
                     <label> Verificar </label>
+                </div>
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                    <input asp-for="@Model.Register.Email" type="email">
+                    <label>Email</label>
+                </div>
+                <div class="input-box">
+                    <label for="TipoUsuario">Tipo de Usuario</label>
+                    <select id="TipoUsuario" asp-for="@Model.Register.TipoUsuario">
+                        <option value=@TipoUsuario.Socio>Socio</option>
+                        <option value=@TipoUsuario.Operador>Operador</option>
+                    </select>
+                    <span asp-validation-for="@Model.Register.TipoUsuario" class="text-danger"></span>
+                </div>
+                <div id="codigoOperadorDiv" class="input-box" style="display: none;">
+                    <label for="CodigoOperador">Código del Operador</label>
+                    <input asp-for="@Model.Register.CodigoOperador" id="CodigoOperador" class="pl-12 text-black w-full h-12 rounded-full bg-white outline-none" type="text">
+                    <span asp-validation-for="@Model.Register.CodigoOperador" class="text-danger"></span>
                 </div>
                 <button type="submit" class="btn"> SingUp </button>
                 <div class="login-register">
@@ -74,3 +92,23 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
+
+@section Scripts {
+    <script>
+        function verificarTipoUsuario() {
+            var tipoUsuario = document.getElementById('TipoUsuario');
+            var codigoOperadorDiv = document.getElementById('codigoOperadorDiv');
+            if (tipoUsuario.value === '@TipoUsuario.Operador') {
+                codigoOperadorDiv.style.display = 'block';
+            } else {
+                codigoOperadorDiv.style.display = 'none';
+            }
+        }
+
+        // Verificar al cargar la página
+        document.addEventListener('DOMContentLoaded', verificarTipoUsuario);
+
+        // Verificar cuando cambia el valor del select
+        document.getElementById('TipoUsuario').addEventListener('change', verificarTipoUsuario);
+    </script>
+}
