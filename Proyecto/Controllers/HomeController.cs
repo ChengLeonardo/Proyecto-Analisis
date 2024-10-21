@@ -7,6 +7,7 @@ using Proyecto.Interfaces;
 using Proyecto.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Proyecto.Controllers;
 
@@ -232,7 +233,7 @@ public class HomeController : Controller
         {
             return RedirectToAction("Login", "Home");
         }
-        
+
         var libro = _repoLibro.SelectWhere(x => x.IdLibro == id)
             .Include(x => x.Editorial)
             .Include(x => x.Titulo)
@@ -872,6 +873,7 @@ public class HomeController : Controller
                 {
                     return NotFound();
                 }
+                Console.WriteLine("aca");
                 var ejemplar = _repoEjemplar.SelectWhere(e => e.IdEjemplar == prestamo.IdEjemplar).FirstOrDefault();
                 ejemplar.Disponible = true;
                 _repoEjemplar.Update(ejemplar);
@@ -881,6 +883,7 @@ public class HomeController : Controller
                 var operador = _repoOperador.SelectWhere(o => o.IdUsuario == idUsuario).FirstOrDefault();
                 prestamo.OperadorRegreso = operador;
                 _repoPrestamo.Update(prestamo);
+                transaction.Commit();
                 return RedirectToAction("Prestamos", "Home", new { socioId = prestamo.Socio.IdSocio });
             }
             catch (Exception ex)
