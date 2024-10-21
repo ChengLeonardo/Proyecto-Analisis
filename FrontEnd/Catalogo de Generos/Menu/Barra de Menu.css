@@ -207,7 +207,7 @@ a {
 }
 
 .nav__social-link {
-  color: var(--white-color);
+  color: #ffffff;
   font-size: 1.5rem;
   transition: transform .4s;
 }
