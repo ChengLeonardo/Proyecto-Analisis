@@ -43,6 +43,10 @@
         <label>Géneros</label>
         @foreach (var genero in Model.Generos)
         {
+            if(genero.Eliminado)
+            {
+                continue;
+            }
             <div>
                 <input type="checkbox" 
                        name="GenerosSeleccionados" 

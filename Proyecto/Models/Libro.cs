@@ -13,4 +13,5 @@ public class Libro
     public Editorial Editorial { get; set; } // Relación N:1 con Editorial
     public Titulo Titulo { get; set; } // Relación N:1 con Titulo
     public ICollection<Ejemplar> Ejemplares { get; set; } // Relación 1:N con Ejemplar
+    public bool Eliminado {get; set; } = false;
 }

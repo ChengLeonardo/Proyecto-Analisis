@@ -380,8 +380,9 @@ public class HomeController : Controller
             .Include(l => l.Titulo)
                 .ThenInclude(t => t.Autores)
             .Include(l => l.Titulo)
-                .ThenInclude(t => t.Generos)    
+                .ThenInclude(t => t.Generos)
             .FirstOrDefault();
+        libro.Titulo.Generos = libro.Titulo.Generos.Where(g => !g.Eliminado).ToList();
 
         if (libro == null)
         {
@@ -977,5 +978,33 @@ public class HomeController : Controller
         {
             return RedirectToAction("Logout", "Home");
         }
+    }
+
+    public IActionResult EliminarLibro(int idLibro)
+    {
+        var libro = _repoLibro.IdSelect(idLibro);
+
+        if(HttpContext.User.FindFirst(ClaimTypes.Email)?.Value == "admin@gmail.com")
+        {
+            _repoLibro.Delete(libro);
+        }
+        else if (HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Operardor")
+        {
+            libro.Eliminado = true;
+            _repoLibro.Update(libro);
+        }
+
+        return RedirectToAction("Index", "Home");
+    }
+
+    public IActionResult EliminarGenero(int idGenero)
+    {
+        var genero = _repoGenero.IdSelect(idGenero);
+
+        genero.Eliminado = true;
+
+        _repoGenero.Update(genero);
+
+        return RedirectToAction("Index", "Home");
     }
 }

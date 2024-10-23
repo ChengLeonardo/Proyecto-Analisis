@@ -62,6 +62,10 @@
             <tbody>
                 @for (int i = 0; i < Model.Generos.Count(); i++)
                 {
+                    if(Model.Generos[i].Eliminado)
+                    {
+                        continue;
+                    }
                     <tr>
                         <td>@(Model.Generos[i].genero)</td>
                         <td>
@@ -72,7 +76,7 @@
                             @if (Model.EsOperador) // Verifica si es administrador
                             {
                                 <a asp-controller="Home" asp-action="ModificarGenero" asp-route-id="@Model.Generos[i].IdGenero" class="btn btn-primary">Modificar</a>
-                                <a asp-controller="Home" asp-action="EliminarGenero" asp-route-id="@Model.Generos[i].IdGenero" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este género?');">Eliminar</a>
+                                <a asp-controller="Home" asp-action="EliminarGenero" asp-route-idGenero="@Model.Generos[i].IdGenero" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este género?');">Eliminar</a>
                             }
                         </td>
                     </tr>
@@ -100,6 +104,10 @@
             <tbody>
                 @for (int i = 0; i < Model.LibrosPopulares.Count(); i++)
                 {
+                    @if(Model.LibrosPopulares[i].Eliminado)
+                    {
+                        continue;
+                    }
                     <tr>
                         <td>@(Model.LibrosPopulares[i].Titulo.titulo)</td>
                         <td>@(Model.LibrosPopulares[i].Editorial.editorial)</td>
@@ -110,7 +118,7 @@
                             @if (Model.EsOperador) // Verifica si es administrador
                             {
                                 <a asp-controller="Home" asp-action="ModificarLibro" asp-route-id="@Model.LibrosPopulares[i].IdLibro" class="btn btn-primary">Modificar</a>
-                                <a asp-controller="Home" asp-action="EliminarLibro" asp-route-id="@Model.LibrosPopulares[i].IdLibro" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este libro?');">Eliminar</a>
+                                <a asp-controller="Home" asp-action="EliminarLibro" asp-route-idLibro="@Model.LibrosPopulares[i].IdLibro" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este libro?');">Eliminar</a>
                             }
                         </td>
                     </tr>
@@ -135,6 +143,10 @@
             <tbody>
                 @for (int i = 0; i < Model.LibrosNuevos.Count(); i++)
                 {
+                    @if(Model.LibrosNuevos[i].Eliminado)
+                    {
+                        continue;
+                    }
                     <tr>
                         <td>@(Model.LibrosNuevos[i].Titulo.titulo)</td>
                         <td>@(Model.LibrosNuevos[i].Editorial.editorial)</td>
@@ -145,7 +157,7 @@
                             @if (Model.EsOperador) // Verifica si es administrador
                             {
                                 <a asp-controller="Home" asp-action="ModificarLibro" asp-route-id="@Model.LibrosNuevos[i].IdLibro" class="btn btn-primary">Modificar</a>
-                                <a asp-controller="Home" asp-action="EliminarLibro" asp-route-id="@Model.LibrosNuevos[i].IdLibro" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este libro?');">Eliminar</a>
+                                <a asp-controller="Home" asp-action="EliminarLibro" asp-route-idLibro="@Model.LibrosNuevos[i].IdLibro" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este libro?');">Eliminar</a>
                             }
                         </td>
                     </tr>
@@ -170,6 +182,10 @@
             <tbody>
                 @for (int i = 0; i < Model.LibrosElegidos.Count(); i++)
                 {
+                    @if(Model.LibrosElegidos[i].Eliminado)
+                    {
+                        continue;
+                    }
                     <tr>
                         <td>@(Model.LibrosElegidos[i].Titulo.titulo)</td>
                         <td>@(Model.LibrosElegidos[i].Editorial.editorial)</td>
@@ -180,7 +196,7 @@
                             @if (Model.EsOperador) // Verifica si es administrador
                             {
                                 <a asp-controller="Home" asp-action="ModificarLibro" asp-route-id="@Model.LibrosElegidos[i].IdLibro" class="btn btn-primary">Modificar</a>
-                                <a asp-controller="Home" asp-action="EliminarLibro" asp-route-id="@Model.LibrosElegidos[i].IdLibro" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este libro?');">Eliminar</a>
+                                <a asp-controller="Home" asp-action="EliminarLibro" asp-route-idLibro="@Model.LibrosElegidos[i].IdLibro" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este libro?');">Eliminar</a>
                             }
 
                         </td>
