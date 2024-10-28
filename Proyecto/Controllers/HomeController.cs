@@ -390,7 +390,7 @@ public class HomeController : Controller
         }
 
         var ejemplares = _repoEjemplar.SelectWhere(e => e.IdLibro == id).ToList();
-
+        var esOperador = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "Operador";
         var viewModel = new DetalleLibroViewModel
         {
             IdLibro = libro.IdLibro,
@@ -404,6 +404,7 @@ public class HomeController : Controller
             ApellidoAutor = libro.Titulo.Autores.FirstOrDefault()?.Apellido ?? "",
             Genero = libro.Titulo.Generos.Select(g => g.genero).ToList(),
             Stock = ejemplares.Count,
+            EsOperador = esOperador
         };
 
         return View(viewModel);

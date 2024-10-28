@@ -27,11 +27,15 @@
             </p>
             <p><strong>Stock:</strong> @Model.Stock</p>
         </div>
-        <div class="col-md-12">
+        @if(!Model.EsOperador)
+        {
+                  <div class="col-md-12">
             <form asp-controller="Home" asp-action="HacerPrestamo" method="post">
                 <input type="hidden" asp-for="IdLibro" />
                 <button type="submit" class="btn btn-primary">Hacer préstamo</button>
             </form>
-        </div>
+        </div>  
+        }
+
     </div>
 </div>

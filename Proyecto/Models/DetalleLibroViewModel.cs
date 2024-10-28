@@ -18,5 +18,6 @@ namespace Proyecto.Models
         public string ApellidoAutor { get; set; }
         public List<string> Genero { get; set; }
         public int Stock { get; set; }
+        public bool EsOperador { get; set; }
     }
 }
