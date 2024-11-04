@@ -13,6 +13,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-position: center;
+    background-size: cover;
 }
 
 #myVideo {
@@ -143,6 +145,11 @@ body {
     font-size: 1em;
     color: #162938;
     font-weight: 500;
+}
+
+.btn a{
+    text-decoration: none;
+    color: inherit;
 }
 
 /*Diseño del Boton de Inicio de Sesion al pasar el cursor por encima*/

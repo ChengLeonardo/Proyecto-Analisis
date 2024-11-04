@@ -1,6 +1,5 @@
 @model Proyecto.Models.DetalleGeneroViewModel
 
-<div class="container">
     <h1>@Model.NombreGenero</h1>
 
     <img src="@("/images/" + Model.RutaFoto ?? "DefaultGenero.jpg")" class="img-fluid mb-3" alt="@Model.NombreGenero" />
@@ -8,10 +7,10 @@
     <div class="row">
         @foreach (var libro in Model.Libros)
         {
-            <div class="col-md-4 mb-4">
-                <div class="card">
+            <div >
+                <div class="card" style="background: #314a60; border-radius: 10px;">
                     <img src="@("/images/" + (libro.RutaFoto ?? "DefaultTapaLibro.jpg"))" class="card-img-top" alt="@libro.Titulo.titulo">
-                    <div class="card-body">
+                    <div class="card-body" style="border-radius: 10px;">
                         <h5 class="card-title">@libro.Titulo.titulo</h5>
                         <p class="card-text">Editorial: @libro.Editorial.editorial</p>
                         <a asp-controller="Home" asp-action="DetalleLibro" asp-route-id="@libro.IdLibro" class="btn btn-primary">Ver detalles</a>
@@ -20,4 +19,3 @@
             </div>
         }
     </div>
-</div>

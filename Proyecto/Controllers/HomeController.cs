@@ -725,7 +725,7 @@ public class HomeController : Controller
                     };
 
                     _repoPrestamo.Insert(prestamo, "IdPrestamo");
-
+                    await transaction.CommitAsync();
                     return RedirectToAction("Prestamos", "Home", new { socioId = socio.IdSocio });
                 }
                 
@@ -1007,5 +1007,28 @@ public class HomeController : Controller
         _repoGenero.Update(genero);
 
         return RedirectToAction("Index", "Home");
+    }
+
+    public IActionResult Contacto()
+    {
+        return View();
+    }
+
+
+    public IActionResult Usuario()
+    {
+        var idUsuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        var usuario = _repoUsuario.SelectWhere(u => u.IdUsuario == idUsuario).FirstOrDefault();
+        return View(usuario);
+    }
+
+    [HttpPost]
+    public IActionResult EditarUsuario(UsuarioViewModel usuario)
+    {
+        var usuarioActual = _repoUsuario.SelectWhere(u => u.IdUsuario == usuario.IdUsuario).FirstOrDefault();
+        usuarioActual.NombreUsuario = usuario.NombreUsuario;
+        usuarioActual.Email = usuario.Email;
+        _repoUsuario.Update(usuarioActual);
+        return RedirectToAction("Usuario", "Home");
     }
 }
