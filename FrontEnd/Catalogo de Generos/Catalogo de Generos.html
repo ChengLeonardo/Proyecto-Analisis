@@ -11,16 +11,9 @@
     <!--== Titulo ==-->
     <title> Catalogo de Generos </title>
 
-    <!--== Iconos y Fuentes ==-->
-    
-    <!--== Splide.js ==-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/splide/3.6.12/splide.min.css">
+    <!--== Iconos ==-->
 
-    <!-- Remixicons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="/FrontEnd/Catalogo de Generos/Menu/Barra de Menu.css">
+    <!--== Estilos ==-->
     <link rel="stylesheet" href="/FrontEnd/Catalogo de Generos/Style/Catalogo.css">
 
     <!--== Scripts ==-->
@@ -28,132 +21,87 @@
     <!--== Scripts de Principal ==-->
     <script src="/FrontEnd/Catalogo de Generos/Js/Catalogo.js"></script>
 
-    <!--Scripts del Menu-->
-    <script src="/FrontEnd/Catalogo de Generos/Menu/Crips.js"></script>
-    
-    <!--== Scripts Splide.js ==-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/splide/3.6.12/splide.min.js"></script>
 
 </head>
 <body>
     <!--== Header ==-->
-    <header class="header" id="header">
-        <nav class="nav container">
-            <a href="#" class="nav__logo"> <img src="../images/main-logo.png" alt="Logo"> </a>
+    <header>
 
-            <div class="nav__menu" id="nav-menu">
-                <ul class="nav__list">
-                    <li class="nav__item">
-                        <a href="/FrontEnd/index.html" class="nav__link">
-                            <i class="ri-home-line"></i>
-                            <span>Inicio</span>
-                        </a>
-                    </li>
+        <a href="" class="logo"> Logo </a>
+        
+        <div class="menuIcon">
+            <div class="bar"></div>
+        </div>
 
-                    <li class="nav__item">
-                        <a href="/FrontEnd/Catalogo de Generos/Catalogo de Generos.html" class="nav__link">
-                            <i class="ri-git-repository-line"></i>
-                            <span>Generos</span>
-                        </a>
-                    </li>
+        <ul class="navList">
+            <li><a href="">Inicio</a></li>
+            <li><a href="">Catálogo</a></li>
+            <li><a href="">Reservados</a></li>
+            <li><a href="">Usuario</a></li>
+            <li><a href="">Contacto</a></li>
+        </ul>
 
-                    <li class="nav__item">
-                        <a href="#" class="nav__link">
-                            <i class="ri-book-shelf-fill"></i>
-                            <span>Reservados</span>
-                        </a>
-                    </li>
-
-                    <li class="nav__item">
-                        <a href="#" class="nav__link">
-                            <i class="ri-user-line"></i>
-                            <span>Usuario</span>
-                        </a>
-                    </li>
-
-                </ul>
-
-                <!-- Boton de Cierre -->
-                <div class="nav__close" id="nav-close">
-                    <i class="ri-close-large-line"></i>
-                </div>
-
-                <div class="nav__social"> <!-- Redes Sociales  color de icono #171264-->
-                    <a href="https://github.com/ChengLeonardo/Proyecto-Analisis" target="_blank" class="nav__social-link">
-                        <i class="ri-github-line"></i>
-                    </a>
-
-                </div>
-            </div>
-
-            <!-- Boton de Toggle -->
-            <div class="nav__toggle" id="nav-toggle">
-                <i class="ri-menu-line"></i>
-            </div>
-        </nav>
     </header>
 
     <main>
-        <!--== Barra de búsqueda ==-->
-        <section class="search-bar">
-            <div class="search-box">
-                <input type="text" class="input-search" placeholder="Buscar géneros">
-                <div class="search-icon">
-                    <i class="ri-search-line"></i>
-                </div>
-            </div>
-        </section>
-    
-        <!--== Slider de géneros ==-->
-        <section class="slider-section">
-            <div id="splide" class="splide">
-                <div class="splide__track">
-                    <ul class="splide__list">
-                        <!-- Tarjeta 1: Romance -->
-                        <li class="splide__slide">
-                            <div class="card">
-                                <img src="../images/romance.jpg" alt="Romance">
-                                <h3>Romance</h3>
-                            </div>
-                        </li>
-                        <!-- Tarjeta 2: Ciencia Ficción -->
-                        <li class="splide__slide">
-                            <div class="card">
-                                <img src="../images/ciencia-ficcion.jpg" alt="Ciencia Ficción">
-                                <h3>Ciencia Ficción</h3>
-                            </div>
-                        </li>
-                        <!-- Tarjeta 3: Terror -->
-                        <li class="splide__slide">
-                            <div class="card">
-                                <img src="../images/terror.jpg" alt="Terror">
-                                <h3>Terror</h3>
-                            </div>
-                        </li>
-                        <!-- Tarjeta 4: Fantasía -->
-                        <li class="splide__slide">
-                            <div class="card">
-                                <img src="../images/fantasia.jpg" alt="Fantasía">
-                                <h3>Fantasía</h3>
-                            </div>
-                        </li>
-                        <!-- Tarjeta 5: Historias -->
-                        <li class="splide__slide">
-                            <div class="card">
-                                <img src="../images/historias.jpg" alt="Historias">
-                                <h3>Historias</h3>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+        <div id="search">
+            <svg viewBox="0 0 420 60" xmlns="http://www.w3.org/2000/svg">
+                <rect class="bar"/>
+                
+                <g class="magnifier">
+                    <circle class="glass"/>
+                    <line class="handle" x1="32" y1="32" x2="44" y2="44"></line>
+                </g>
+        
+                <g class="sparks">
+                    <circle class="spark"/>
+                    <circle class="spark"/>
+                    <circle class="spark"/>
+                </g>
+        
+                <g class="burst pattern-one">
+                    <circle class="particle circle"/>
+                    <path class="particle triangle"/>
+                    <circle class="particle circle"/>
+                    <path class="particle plus"/>
+                    <rect class="particle rect"/>
+                    <path class="particle triangle"/>
+                </g>
+                <g class="burst pattern-two">
+                    <path class="particle plus"/>
+                    <circle class="particle circle"/>
+                    <path class="particle triangle"/>
+                    <rect class="particle rect"/>
+                    <circle class="particle circle"/>
+                    <path class="particle plus"/>
+                </g>
+                <g class="burst pattern-three">
+                    <circle class="particle circle"/>
+                    <rect class="particle rect"/>
+                    <path class="particle plus"/>
+                    <path class="particle triangle"/>
+                    <rect class="particle rect"/>
+                    <path class="particle plus"/>
+                </g>
+            </svg>
+            <input type=search name=q aria-label="Search for inspiration"/>
+        </div>
+        
+        <div id="results">
+            
+        </div>
+        
+        <div class="Populares">
+            
+        </div>
     </main>    
 
     <aside>
+
     </aside>
 
     <footer>
+
     </footer>
 
 </body>

@@ -9,7 +9,6 @@
 
 
 /* carousel */
-
 .carousel{
     width: 100vw;
     height: 100vh;
@@ -63,10 +62,6 @@
     left: calc(67% + 800px);
     opacity: 0;
 }
-
-
-
-
 
 .list .item .content{
     position: absolute;
@@ -166,10 +161,6 @@
 /* Carousel */
 
 
-
-
-
-
 /* next prev arrows */
 
 .arrows{
@@ -211,7 +202,7 @@
     z-index: 1000;
     width: 0%;
     height: 4px;
-    background-color: #14ff72cb;
+    background: transparent;
     left: 0;
     top: 0;
     animation: runningTime 7s linear 1 forwards;
@@ -222,47 +213,4 @@
     from{width: 0%;}
     to{width: 100%;}
 
-}
-
-
-/* Responsive Design */
-
-@media screen and (max-width: 999px){
-    
-    header{
-        padding-left: 50px;
-    }
-
-    .list .item .content{
-        left: 50px;
-    }
-
-    .content .title, .content .name{
-        font-size: 70px;
-    }
-
-    .content .des{
-        font-size: 16px;
-    }
-
-}
-
-@media screen and (max-width: 690px){
-    header nav a{
-        font-size: 14px;
-        margin-right: 0;
-    }
-
-    .list .item .content{
-        top: 40%;
-    }
-
-    .content .title, .content .name{
-        font-size: 45px;
-    }
-
-    .content .btn button{
-        padding: 10px 15px;
-        font-size: 14px;
-    }
 }
