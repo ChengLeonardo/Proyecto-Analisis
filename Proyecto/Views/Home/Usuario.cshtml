@@ -1,0 +1,20 @@
+@model Usuario
+
+<div style="display: flex; justify-content: start; gap: 10px;">
+<h1>Nombre: @Model.NombreUsuario</h1>
+<h1>Email: @Model.Email</h1>
+<h1>Tipo de usuario: @Model.TipoUsuario</h1>
+</div>
+
+
+<p style="font-size: 20px; justify-content: start;">Editar usuario</p>
+<form asp-action="EditarUsuario" asp-controller="Home" method="post">
+    <div class="input-group w-100">
+        <input type="text" name="NombreUsuario" class="form-control" placeholder="Nombre de usuario">
+    </div>
+    <input type="hidden" class="form-control" asp-for="IdUsuario" />
+    <div class="input-group w-100">
+        <input type="text" name="Email" class="form-control" placeholder="Email">
+    </div>
+    <input type="submit" value="Guardar" class="btn btn-primary" />
+</form>

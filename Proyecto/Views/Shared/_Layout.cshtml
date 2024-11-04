@@ -5,10 +5,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/site.css">
     <title>@ViewData["Title"]</title>
     @RenderSection("Styles", required: false)
 </head>
-@RenderBody()
+@if(ViewData["Title"] != "Login")
+{
+<nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" asp-action="Index" asp-controller="Home">Inicio</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" asp-action="Usuario" asp-controller="Home">Usuario</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-action="Contacto" asp-controller="Home">Contacto</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+}
+
+@if(ViewData["Title"] != "Login")
+{
+<div class="container">
+    @RenderBody()
+</div>
+}
+else
+{
+    @RenderBody()
+}
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

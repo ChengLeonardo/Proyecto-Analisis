@@ -1,43 +1,44 @@
 ﻿@model Proyecto.Models.HomeIndexViewModel;
-<div class="container">
+@section Styles {
+    <link rel="stylesheet" href="~/css/Index.css">
+}
+
     <!-- 搜索表单 -->
-    <div class="row mb-4">
-        <div class="col-md-6 offset-md-3">
-            <form asp-controller="Home" asp-action="BuscarLibro" method="get" class="form-inline">
+    <div class="buscar">
+        <form asp-controller="Home" asp-action="BuscarLibro" method="get" class="form-inline">
+            <div class="input-group w-100">
+                <input type="text" name="query" class="form-control" placeholder="Buscar libros...">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    @if(Model.EsOperador == true)
+    {
+        <div class="buscar">
+            <form asp-controller="Home" asp-action="BuscarSocio" method="get" class="form-inline">
                 <div class="input-group w-100">
-                    <input type="text" name="query" class="form-control" placeholder="Buscar libros...">
+                    <input type="text" name="query" class="form-control" placeholder="Buscar socio...">
                     <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">Buscar</button>
+                        <button type="submit" class="btn btn-primary">Buscar Socio</button>
                     </div>
                 </div>
             </form>
         </div>
-    </div>
-    @if(Model.EsOperador == true)
-    {
-        <div class="row mb-4">
-            <div class="col-md-6 offset-md-3">
-                <form asp-controller="Home" asp-action="BuscarSocio" method="get" class="form-inline">
-                    <div class="input-group w-100">
-                        <input type="text" name="query" class="form-control" placeholder="Buscar socio...">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary">Buscar Socio</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
     }
     @if (Model.Administrador == true)
     {
-        <form asp-controller="Home" asp-action="BuscarOperador" method="get" class="form-inline">
-            <div class="input-group w-100">
+        <div class="buscar">
+            <form asp-controller="Home" asp-action="BuscarOperador" method="get" class="form-inline">
+                <div class="input-group w-100">
                 <input type="text" name="query" class="form-control" placeholder="Buscar operador...">
                 <div class="input-group-append">
                     <button type="submit" class="btn btn-primary">Buscar Operador</button>
                 </div>
-            </div>
-        </form>
+                </div>
+            </form>
+        </div>
     }
     else if (Model.EsOperador == false)
     {
@@ -208,6 +209,6 @@
 
     <form asp-controller="Home" asp-action="Logout" method="post">
         @Html.AntiForgeryToken()
-        <button type="submit">Logout</button>
+        <button type="submit" class="btn btn-primary">Logout</button>
     </form>
-</div>
+
