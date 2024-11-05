@@ -72,6 +72,7 @@ a {
   left: 0;
   background-color: var(--black-color);
   z-index: var(--z-fixed);
+  position: absolute;
 }
 
 .nav {

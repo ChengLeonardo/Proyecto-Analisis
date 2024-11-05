@@ -10,13 +10,15 @@ a{
 }
 header{
     width: 1140px;
-    max-width: 80%;
     margin: auto;
     height: 50px;
     display: flex;
     align-items: center;
     position: relative;
     z-index: 100;
+    right: 0;
+    top: 0;
+    width: 100%;
 }
 header a{
     color: #eee;
@@ -91,7 +93,7 @@ header a{
     bottom: 50px;
     left: 50%;
     width: max-content;
-    z-index: 100;
+    z-index: 1;
     display: flex;
     gap: 20px;
 }
