@@ -1,0 +1,338 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap');
+
+/* Estilos generales para todos los elementos */
+*{
+    margin: 0; /* Elimina el margen */
+    padding: 0; /* Elimina el relleno */
+    box-sizing: border-box; /* Define como se calcula el ancho y alto de un elemento */
+    text-decoration: none; /* Elimina la decoración del texto */
+}
+
+/* Estilos específicos para el cuerpo */
+body{
+    font-family: 'Poppins', sans-serif; /* Establece la fuente */
+    min-height: 100vh; /* Establece la altura mínima */
+    overflow: hidden; /* Oculta el contenido sobrante */
+}
+
+/* Estilos para el video de fondo */
+#myVideo{
+    position: fixed; /* Posición fija */
+    top: 50%; /* Arriba */
+    left: 50%; /* Izquierda */
+    transform: translate(-50%, -50%); /* Centra el video */
+    width: auto; /* Ancho del 100% */
+    height: auto; /* Alto del 100% */
+    z-index: -1; /* Coloca el video detrás de otros elementos */
+}
+
+/* Estilos para el encabezado */
+/*Heaader*/
+header{
+    position: fixed; /* Posición fija */
+    top: 0; /* Arriba */
+    left: 0; /* Izquierda */
+    width: 100%; /* Ancho del 100% */
+    padding: 20px 8%; /* Relleno */
+    display: flex; /* Muestra los elementos como un contenedor flexible */
+    justify-content: space-between; /* Justifica el contenido entre los elementos */
+    align-items: center; /* Alinea los elementos verticalmente */
+}
+
+/* Estilos para el logotipo */
+.logo{
+    font-weight: 700; /* Peso de la fuente */
+    font-size: 1.8rem; /* Tamaño de la fuente */
+}
+
+/* Estilos para la lista de navegación */
+.navList{
+    position: relative; /* Posición relativa */
+    display: flex; /* Muestra los elementos como un contenedor flexible */
+}
+
+/* Estilos para los elementos de la lista de navegación */
+.navList li{
+    list-style: none; /* Elimina el estilo de lista */
+    margin-left: 2rem; /* Margen izquierdo */
+}
+
+/* Estilos para los enlaces de la lista de navegación */
+.navList li a{
+    display: flex; /* Muestra los elementos como un contenedor flexible */
+    color: #ffff; /* Color del texto */
+    position: relative; /* Posición relativa */
+    text-transform: uppercase; /* Transforma el texto a mayúsculas */
+    font-weight: 500; /* Peso de la fuente */
+    text-shadow: rgb(255, 0, 255) 1px 0px 10px; /* Sombra de texto */
+}
+
+/* Estilos para los spans de los enlaces de la lista de navegación */
+.navList li a span{
+    position: relative; /* Posición relativa */
+    transition: .5s; /* Transición */
+    overflow: hidden; /* Oculta el contenido sobrante */
+    -webkit-transition: .5s; /* Transición para Chrome y Safari */
+    -moz-transition: .5s; /* Transición para Firefox */
+    -ms-transition: .5s; /* Transición para Internet Explorer y Edge */
+    -o-transition: .5s; /* Transición para Opera */
+}
+
+/* Estilos para el texto "up" de los spans de los enlaces de la lista de navegación */
+.navList li a span .up{
+    display: inline-flex; /* Muestra los elementos como un contenedor flexible en línea */
+}
+
+/* Estilos para el texto "up" al pasar el mouse sobre los enlaces de la lista de navegación */
+.navList li a:hover span .up{
+    transform: translateY(100%); /* Mueve el elemento hacia abajo */
+    -webkit-transform: translateY(100%); /* Mueve el elemento hacia abajo para Chrome y Safari */
+    -moz-transform: translateY(100%); /* Mueve el elemento hacia abajo para Firefox */
+    -ms-transform: translateY(100%); /* Mueve el elemento hacia abajo para Internet Explorer y Edge */
+    -o-transform: translateY(100%); /* Mueve el elemento hacia abajo para Opera */
+}
+
+/* Estilos para el texto "down" de los spans de los enlaces de la lista de navegación */
+.navList li a span .down{
+    position: absolute; /* Posición absoluta */
+    color: #f4a1ff; /* Color del texto */
+    text-shadow: rgb(255, 0, 255) 1px 0px 10px; /* Sombra de texto */
+    left: 0; /* Izquierda */
+    transform: translateY(-100%); /* Mueve el elemento hacia arriba */
+    -webkit-transform: translateY(-100%); /* Mueve el elemento hacia arriba para Chrome y Safari */
+    -moz-transform: translateY(-100%); /* Mueve el elemento hacia arriba para Firefox */
+    -ms-transform: translateY(-100%); /* Mueve el elemento hacia arriba para Internet Explorer y Edge */
+    -o-transform: translateY(-100%); /* Mueve el elemento hacia arriba para Opera */
+}
+
+/* Estilos para el texto "down" al pasar el mouse sobre los enlaces de la lista de navegación */
+.navList li a:hover span .down{
+    transform: translateY(0); /* Mueve el elemento a su posición original */
+    -webkit-transform: translateY(0); /* Mueve el elemento a su posición original para Chrome y Safari */
+    -moz-transform: translateY(0); /* Mueve el elemento a su posición original para Firefox */
+    -ms-transform: translateY(0); /* Mueve el elemento a su posición original para Internet Explorer y Edge */
+    -o-transform: translateY(0); /* Mueve el elemento a su posición original para Opera */
+}
+
+/* Estilos para el icono del menú */
+.menuIcon{
+    position: relative; /* Posición relativa */
+    display: none; /* Oculta el elemento */
+    width: 30px; /* Ancho */
+    height: 30px; /* Alto */
+    cursor: pointer; /* Cambia el cursor a una mano */
+}
+
+/* Estilos para las barras del icono del menú */
+.menuIcon .bar, 
+.menuIcon::after,
+.menuIcon::before{
+    content: ""; /* Contenido */
+    display: block; /* Muestra el elemento como un bloque */
+    width: 100%; /* Ancho del 100% */
+    height: 4px; /* Alto */
+    border-radius: 3px; /* Radio de esquina */
+    background-color: #ffff; /* Color de fondo */
+    margin: 4px 0; /* Margen */
+    transition: .4s; /* Transición */
+    -webkit-border-radius: 3px; /* Radio de esquina para Chrome y Safari */
+    -moz-border-radius: 3px; /* Radio de esquina para Firefox */
+    -ms-border-radius: 3px; /* Radio de esquina para Internet Explorer y Edge */
+    -o-border-radius: 3px; /* Radio de esquina para Opera */
+    -webkit-transition: .4s; /* Transición para Chrome y Safari */
+    -moz-transition: .4s; /* Transición para Firefox */
+    -ms-transition: .4s; /* Transición para Internet Explorer y Edge */
+    -o-transition: .4s; /* Transición para Opera */
+}
+
+/* Estilos para el icono del menú activo */
+.menuIcon.active::before{
+    transform: rotate(-45deg) translate(-6px, 5px); /* Rota y mueve el elemento */
+    -webkit-transform: rotate(-45deg) translate(-6px, 5px); /* Rota y mueve el elemento para Chrome y Safari */
+    -moz-transform: rotate(-45deg) translate(-6px, 5px); /* Rota y mueve el elemento para Firefox */
+    -ms-transform: rotate(-45deg) translate(-6px, 5px); /* Rota y mueve el elemento para Internet Explorer y Edge */
+    -o-transform: rotate(-45deg) translate(-6px, 5px); /* Rota y mueve el elemento para Opera */
+}
+
+.menuIcon.active::after{
+    transform: rotate(45deg) translate(-6px, -6px); /* Rota y mueve el elemento */
+    -webkit-transform: rotate(45deg) translate(-6px, -6px); /* Rota y mueve el elemento para Chrome y Safari */
+    -moz-transform: rotate(45deg) translate(-6px, -6px); /* Rota y mueve el elemento para Firefox */
+    -ms-transform: rotate(45deg) translate(-6px, -6px); /* Rota y mueve el elemento para Internet Explorer y Edge */
+    -o-transform: rotate(45deg) translate(-6px, -6px); /* Rota y mueve el elemento para Opera */
+}
+
+.menuIcon.active .bar{
+    opacity: 0; /* Hace el elemento transparente */
+}
+
+/* Estilos para pantallas de hasta 992px de ancho */
+@media (max-width: 992px){
+    header{
+        padding: 20px 4%; /* Ajusta el relleno */
+    }
+}
+
+/* Estilos para pantallas de hasta 768px de ancho */
+@media (max-width: 768px){
+    
+    .menuIcon{
+        display: block; /* Muestra el elemento */
+    }
+
+    header{
+        background: rgba(0, 0, 0, 0.5); /* Ajusta el color de fondo */
+    }
+
+    .navList{
+        position: absolute; /* Posición absoluta */
+        top: 100%; /* Abajo */
+        left: 0; /* Izquierda */
+        display: none; /* Oculta el elemento */
+        height: 0rem; /* Alto */
+        width: 100%; /* Ancho del 100% */
+        background: rgba(0, 0, 0, 0.5); /* Color de fondo */
+        transition: .3s; /* Transición */
+        overflow: hidden; /* Oculta el contenido sobrante */
+        -webkit-transition: .3s; /* Transición para Chrome y Safari */
+        -moz-transition: .3s; /* Transición para Firefox */
+        -ms-transition: .3s; /* Transición para Internet Explorer y Edge */
+        -o-transition: .3s; /* Transición para Opera */
+    }
+
+    .navList li a{
+        display: block; /* Muestra los elementos como un bloque */
+        text-align: center; /* Alinea el texto al centro */
+        margin: 1.5rem 0; /* Margen */
+        overflow: hidden; /* Oculta el contenido sobrante */
+    }
+
+    .navList li{
+        margin: 0; /* Elimina el margen */
+    }
+
+    .navList.activeMenu{
+        height: 17rem; /* Alto */
+        display: block; /* Muestra el elemento */
+    }
+
+}
+
+/* Estilos para el contenedor del buscador */
+.container {
+  position: relative;
+  width: 300px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 100px auto; /* Centra el contenedor en la página */
+}
+
+/* Estilos para el buscador */
+.searchBox {
+  width: 300px;
+  height: 50px;
+  padding: 10px;
+  border-radius: 15px;
+  border: none;
+  background-color: var(--bg-color);
+  transform: scale(1); /* Cambiado a 1 para que sea visible */
+  transition: transform 1s ease;
+}
+
+.searchBox:focus {
+  outline: none;
+}
+
+.btn, .btn-2 {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: none;  
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  background: var(--bg-color);
+}
+
+.btn-2 {
+  width: 50px;
+  height: 50px;
+  bottom: 0;
+  transform: scale(0);
+  z-index: 100;
+  display: flex;  
+  text-decoration: none;
+}
+
+.btn i, .btn-2 i {
+  color: var(--text-color);
+  transform: rotate(0.25turn);
+  font-size: 1.5rem;
+}
+
+.btn-2 i  {
+  color: var(--bg-color);
+}
+
+.redo {
+  display: block;
+  position: absolute;
+  bottom: -50px;
+  color: #dcd3fd;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+  cursor: pointer;
+}
+
+.appear {
+  transform: scale(0);
+  transition: transform 0.2s ease;
+}
+
+.redo:active {
+  transform: scale(0.9);
+}
+
+.btn::after, .btn-2::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  height: calc(100% + 10px);
+  width: calc(100% + 10px);
+  border-radius: 50%;
+  z-index: -10;
+  transform-origin: center;
+  background: linear-gradient(#603ce2,#f54991,#e591aa); 
+  animation: circling 8s infinite;
+}
+
+@keyframes circling {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }  
+}
+
+.btn:hover i {
+  color: var(--bg-color);
+}
+
+.btn:hover {
+  background: linear-gradient(#e591aa,#603ce2);    
+}
+
+.btn:active {
+  transform: scale(0.9);
+}
+
+footer {
+  color: var(--bg-color);
+  text-align: center;
+  margin-bottom: 100px;
+  text-shadow: 1px 1px 3px #3b268a;
+}
